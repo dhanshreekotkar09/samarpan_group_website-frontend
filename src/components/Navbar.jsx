@@ -5,8 +5,8 @@ import logo from "../assets/sg_logo.jpg";
 // ── CONTACT CONSTANTS (shared across navbar) ──
 const PHONE      = "+91 80555 87237";
 const PHONE_LINK = "tel:+918055587237";
-const EMAIL      = "official.samarpan.group@gmail.com";
-const EMAIL_LINK = "https://mail.google.com/mail/?view=cm&to=official.samarpan.group@gmail.com";
+const EMAIL      = "thesamarpaninteriors@gmail.com";
+const EMAIL_LINK = "https://mail.google.com/mail/?view=cm&to=thesamarpaninteriors@gmail.com";
 const WHATSAPP   = "https://wa.me/918055587237";
 const INSTAGRAM  = "https://www.instagram.com/samarpan_group_interiors?igsh=dmlvb2R5YzRiNmhw";
 const FACEBOOK   = "https://www.facebook.com/share/1B978MBdLy/";
@@ -18,7 +18,26 @@ const NAV_LINKS = [
     label: "Services",
     href: "#services",
     path: "/",
-    dropdown: ["Interior Design", "Space Planning", "Furniture Styling", "Lighting Design", "3D Visualization"],
+    dropdown: [
+      {
+        title: "Civil",
+        items: [
+          "Structural Excellence",
+          "Foundation to Finish",
+          "Engineered with Precision",
+          "Turnkey Construction",
+        ],
+      },
+      {
+        title: "Interior",
+        items: [
+          "Bespoke Interiors",
+          "Functional Elegance",
+          "3D Visualized Design",
+          "Crafted With Detail",
+        ],
+      },
+    ],
   },
   { label: "Projects", href: "#projects", path: "/projects" },
   { label: "Contact",  href: "#contact",  path: "/contact" },
@@ -97,7 +116,7 @@ export default function SamarpanNavbar() {
   };
 
   const s = {
-    wrapper: { fontFamily: "'Jost', sans-serif" },
+    wrapper: { fontFamily: "var(--font-sans)" },
 
     topBar: {
       background: "#2a2a24",
@@ -116,8 +135,7 @@ export default function SamarpanNavbar() {
       paddingBottom: scrolled ? 0 : "8px",
     },
     topBarLeft: {
-      fontFamily: "'Cormorant Garamond', serif",
-      fontStyle: "italic",
+      fontFamily: "var(--font-sans)",
       fontSize: "13px",
       letterSpacing: "0.5px",
       color: "#d4c4a0",
@@ -165,7 +183,7 @@ export default function SamarpanNavbar() {
     },
     logoText: { display: "flex", flexDirection: "column", lineHeight: 1 },
     logoMain: {
-      fontFamily: "'Cormorant Garamond', serif",
+      fontFamily: "var(--font-sans)",
       fontSize: scrolled ? "18px" : "22px", fontWeight: 600,
       color: "#2a2a24", letterSpacing: "0.5px", transition: "font-size 0.4s ease",
     },
@@ -185,13 +203,19 @@ export default function SamarpanNavbar() {
       position: "absolute", top: "calc(100% + 10px)", left: "50%",
       transform: "translateX(-50%)",
       background: "rgba(255,252,245,0.98)", backdropFilter: "blur(16px)",
-      borderRadius: "14px", padding: "10px", minWidth: "200px",
+      borderRadius: "14px", padding: "16px", minWidth: "460px",
+      display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px 20px",
       boxShadow: "0 20px 50px rgba(42,42,36,0.15), 0 0 0 1px rgba(138,154,74,0.15)",
       zIndex: 100, animation: "dropIn 0.2s ease",
     },
+    dropdownGroupTitle: {
+      fontSize: "10px", fontWeight: 700, letterSpacing: "1.8px",
+      textTransform: "uppercase", color: "#6b7c32",
+      padding: "4px 12px 10px",
+    },
     dropdownItem: {
-      display: "block", padding: "10px 16px", fontSize: "12px",
-      letterSpacing: "0.8px", color: "#3d3d30", borderRadius: "8px",
+      display: "block", padding: "8px 12px", fontSize: "12px",
+      letterSpacing: "0.4px", color: "#3d3d30", borderRadius: "8px",
       cursor: "pointer", textDecoration: "none", transition: "all 0.15s ease",
     },
     navRight: { display: "flex", alignItems: "center", gap: "12px" },
@@ -240,7 +264,7 @@ export default function SamarpanNavbar() {
       display: "flex", alignItems: "center", justifyContent: "space-between",
       background: "#2a2a24",
     },
-    drawerLogo: { fontFamily: "'Cormorant Garamond', serif", fontSize: "20px", fontWeight: 600, color: "#e8d9b5" },
+    drawerLogo: { fontFamily: "var(--font-sans)", fontSize: "20px", fontWeight: 600, color: "#e8d9b5" },
     drawerSub:  { fontSize: "9px", letterSpacing: "2px", color: "#8a9a4a", textTransform: "uppercase", marginTop: "2px" },
     closeBtn: {
       width: "36px", height: "36px", borderRadius: "8px",
@@ -254,6 +278,11 @@ export default function SamarpanNavbar() {
       color: "#2a2a24", borderBottom: "1px solid rgba(138,154,74,0.15)", cursor: "pointer",
     },
     drawerAccordion: { background: "rgba(138,154,74,0.06)", overflow: "hidden" },
+    drawerGroupTitle: {
+      padding: "12px 24px 6px 40px",
+      fontSize: "10px", fontWeight: 700, letterSpacing: "1.8px",
+      textTransform: "uppercase", color: "#6b7c32",
+    },
     drawerAccordionItem: {
       display: "block", padding: "12px 24px 12px 40px",
       fontSize: "11px", letterSpacing: "1px", color: "#4a5a2f",
@@ -292,7 +321,6 @@ export default function SamarpanNavbar() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
         @keyframes dropIn {
           from { opacity: 0; transform: translateX(-50%) translateY(-8px); }
@@ -398,11 +426,21 @@ export default function SamarpanNavbar() {
 
                   {link.dropdown && activeDropdown === link.label && (
                     <div style={s.dropdown}>
-                      {link.dropdown.map((item) => (
-                        <a key={item} href="#" className="dropdown-item" style={s.dropdownItem}
-                          onClick={(e) => { e.preventDefault(); setActiveDropdown(null); }}>
-                          {item}
-                        </a>
+                      {link.dropdown.map((group) => (
+                        <div key={group.title}>
+                          <div style={s.dropdownGroupTitle}>{group.title}</div>
+                          {group.items.map((item) => (
+                            <a
+                              key={item}
+                              href="#"
+                              className="dropdown-item"
+                              style={s.dropdownItem}
+                              onClick={(e) => { e.preventDefault(); setActiveDropdown(null); }}
+                            >
+                              {item}
+                            </a>
+                          ))}
+                        </div>
                       ))}
                     </div>
                   )}
@@ -454,11 +492,20 @@ export default function SamarpanNavbar() {
               </div>
               {link.dropdown && mobileExpanded === link.label && (
                 <div style={s.drawerAccordion}>
-                  {link.dropdown.map((item) => (
-                    <a key={item} href="#" style={s.drawerAccordionItem}
-                      onClick={(e) => { e.preventDefault(); setMobileOpen(false); }}>
-                      — {item}
-                    </a>
+                  {link.dropdown.map((group) => (
+                    <div key={group.title}>
+                      <div style={s.drawerGroupTitle}>{group.title}</div>
+                      {group.items.map((item) => (
+                        <a
+                          key={item}
+                          href="#"
+                          style={s.drawerAccordionItem}
+                          onClick={(e) => { e.preventDefault(); setMobileOpen(false); }}
+                        >
+                          — {item}
+                        </a>
+                      ))}
+                    </div>
                   ))}
                 </div>
               )}

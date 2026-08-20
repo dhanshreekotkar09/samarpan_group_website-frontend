@@ -26,11 +26,10 @@ export default function ContactPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         .ct-page {
-          font-family: 'Jost', sans-serif;
+          font-family: var(--font-sans);
           background: linear-gradient(160deg, #f5f0e8 0%, #ede8d8 40%, #e8e0cc 100%);
           color: #3d3d30;
           min-height: 100vh;
@@ -59,13 +58,13 @@ export default function ContactPage() {
           margin-bottom: 28px;
         }
         .ct-hero h1 {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: clamp(48px, 7vw, 84px);
           font-weight: 300; line-height: 1.05;
           color: #2a2a24; letter-spacing: -2px;
           margin-bottom: 20px; max-width: 700px;
         }
-        .ct-hero h1 em { font-style: italic; color: #8a9a4a; }
+        .ct-hero h1 em { font-style: normal; font-weight: 600; color: #8a9a4a; }
         .ct-hero-sub {
           font-size: 14px; font-weight: 300; line-height: 1.9;
           color: #5a5a4a; max-width: 480px;
@@ -105,7 +104,7 @@ export default function ContactPage() {
           text-transform: uppercase; color: #8a9a4a; margin-bottom: 6px;
         }
         .ct-card-value {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: 19px; font-weight: 500;
           color: #2a2a24; line-height: 1.4;
         }
@@ -132,13 +131,13 @@ export default function ContactPage() {
           background: linear-gradient(90deg, #8a9a4a, transparent);
         }
         .ct-left h2 {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: clamp(32px, 3.5vw, 44px);
           font-weight: 400; color: #2a2a24;
           line-height: 1.15; letter-spacing: -0.5px;
           margin-bottom: 20px;
         }
-        .ct-left h2 em { font-style: italic; color: #8a9a4a; }
+        .ct-left h2 em { font-style: normal; font-weight: 600; color: #8a9a4a; }
         .ct-left p {
           font-size: 13.5px; font-weight: 300;
           color: #5a5a4a; line-height: 1.9; margin-bottom: 36px;
@@ -192,7 +191,7 @@ export default function ContactPage() {
           box-shadow: 0 8px 40px rgba(42,42,36,0.07);
         }
         .ct-form-title {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: 28px; font-weight: 500; color: #2a2a24;
           margin-bottom: 6px; letter-spacing: -0.3px;
         }
@@ -213,7 +212,7 @@ export default function ContactPage() {
           border: 1.5px solid rgba(138,154,74,0.2);
           border-radius: 10px;
           font-size: 13px; font-weight: 300;
-          color: #2a2a24; font-family: 'Jost', sans-serif;
+          color: #2a2a24; font-family: var(--font-sans);
           outline: none; transition: all 0.2s ease;
           width: 100%;
         }
@@ -233,7 +232,7 @@ export default function ContactPage() {
           border-radius: 12px; border: none; cursor: pointer;
           transition: all 0.3s ease;
           box-shadow: 0 6px 20px rgba(42,42,36,0.2);
-          font-family: 'Jost', sans-serif;
+          font-family: var(--font-sans);
           margin-top: 4px;
         }
         .ct-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(42,42,36,0.3); }
@@ -249,7 +248,7 @@ export default function ContactPage() {
           font-size: 30px; margin: 0 auto 24px;
         }
         .ct-success h3 {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: 28px; color: #2a2a24; margin-bottom: 10px;
         }
         .ct-success p { font-size: 13px; font-weight: 300; color: #6a6a54; line-height: 1.8; }
@@ -284,7 +283,7 @@ export default function ContactPage() {
           font-weight: 600; margin-bottom: 10px;
         }
         .ct-map-addr-text {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: 17px; color: #2a2a24;
           line-height: 1.65; font-weight: 400;
           margin-bottom: 22px;
@@ -316,7 +315,7 @@ export default function ContactPage() {
           border-radius: 12px; color: #e8d9b5;
           font-size: 11px; letter-spacing: 1.5px;
           text-transform: uppercase; cursor: pointer;
-          font-family: 'Jost', sans-serif; font-weight: 500;
+          font-family: var(--font-sans); font-weight: 500;
           transition: all 0.25s ease; text-decoration: none;
           text-align: center;
           box-shadow: 0 4px 14px rgba(42,42,36,0.2);
@@ -340,12 +339,12 @@ export default function ContactPage() {
         .ct-faq-inner { max-width: 900px; margin: 0 auto; }
         .ct-faq-header { text-align: center; margin-bottom: 48px; }
         .ct-faq-header h2 {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: clamp(32px, 4vw, 48px);
           font-weight: 400; color: #2a2a24;
           letter-spacing: -0.5px; margin-top: 12px;
         }
-        .ct-faq-header h2 em { font-style: italic; color: #8a9a4a; }
+        .ct-faq-header h2 em { font-style: normal; font-weight: 600; color: #8a9a4a; }
         .ct-faq-list { display: flex; flex-direction: column; gap: 2px; }
         .ct-faq-item {
           border: 1px solid rgba(138,154,74,0.15);
@@ -360,7 +359,7 @@ export default function ContactPage() {
           justify-content: space-between;
           padding: 20px 24px;
           background: none; border: none; cursor: pointer;
-          font-family: 'Jost', sans-serif;
+          font-family: var(--font-sans);
           font-size: 14px; font-weight: 500;
           color: #2a2a24; text-align: left;
           gap: 16px; transition: all 0.2s ease;
@@ -421,10 +420,10 @@ export default function ContactPage() {
             <div className="ct-card-sub">Mon–Sat, 9am – 6pm</div>
           </a>
           {/* Email card */}
-          <a href="https://mail.google.com/mail/?view=cm&to=official.samarpan.group@gmail.com" className="ct-card">
+          <a href="https://mail.google.com/mail/?view=cm&to=thesamarpaninteriors@gmail.com" className="ct-card">
             <div className="ct-card-icon">✉️</div>
             <div className="ct-card-label">Email Us</div>
-            <div className="ct-card-value">official.samarpan.group@gmail.com</div>
+            <div className="ct-card-value">thesamarpaninteriors@gmail.com</div>
             <div className="ct-card-sub">We respond within 24 hrs</div>
           </a>
           {/* WhatsApp card */}
@@ -451,7 +450,7 @@ export default function ContactPage() {
               {[
                 { icon: "🏠", key: "Studio Address", val: "Office No. 1, Deepjyot Apartment,\nHanumanwadi, Makhmalabad Road,\nPanchavati, Nashik – 422003", href: MAPS_LINK },
                 { icon: "📱", key: "WhatsApp & Call", val: "+91 80555 87237", href: WHATSAPP_LINK },
-                { icon: "✉️", key: "Email", val: "official.samarpan.group@gmail.com", href: "https://mail.google.com/mail/?view=cm&to=official.samarpan.group@gmail.com" },
+                { icon: "✉️", key: "Email", val: "thesamarpaninteriors@gmail.com", href: "https://mail.google.com/mail/?view=cm&to=thesamarpaninteriors@gmail.com" },
                 { icon: "📸", key: "Instagram", val: "@Samarpan_Group_Interiors", href: "https://www.instagram.com/samarpan_group_interiors?igsh=dmlvb2R5YzRiNmhw" },
               ].map((item) => (
                 <div key={item.key} className="ct-info-item">
@@ -516,12 +515,18 @@ export default function ContactPage() {
                     <label className="ct-label">Service Interested In</label>
                     <select className="ct-select" name="service" value={form.service} onChange={handleChange}>
                       <option value="">Select a service...</option>
-                      <option>Interior Design</option>
-                      <option>Space Planning</option>
-                      <option>Furniture Styling</option>
-                      <option>Lighting Design</option>
-                      <option>3D Visualization</option>
-                      <option>Full Home Interior</option>
+                      <optgroup label="Civil">
+                        <option>Structural Excellence</option>
+                        <option>Foundation to Finish</option>
+                        <option>Engineered with Precision</option>
+                        <option>Turnkey Construction</option>
+                      </optgroup>
+                      <optgroup label="Interior">
+                        <option>Bespoke Interiors</option>
+                        <option>Functional Elegance</option>
+                        <option>3D Visualized Design</option>
+                        <option>Crafted With Detail</option>
+                      </optgroup>
                     </select>
                   </div>
                   <div className="ct-field">

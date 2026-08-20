@@ -68,11 +68,10 @@ export default function AboutUs() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         .ab-page {
-          font-family: 'Jost', sans-serif;
+          font-family: var(--font-sans);
           background: linear-gradient(160deg, #f5f0e8 0%, #ede8d8 40%, #e8e0cc 100%);
           color: #3d3d30;
           min-height: 100vh;
@@ -107,13 +106,13 @@ export default function AboutUs() {
           color: #4a5a1f; margin-bottom: 28px;
         }
         .ab-hero h1 {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: clamp(44px, 5.5vw, 72px);
           font-weight: 300; line-height: 1.08;
           color: #2a2a24; letter-spacing: -1.5px;
           margin-bottom: 24px;
         }
-        .ab-hero h1 em { font-style: italic; color: #8a9a4a; }
+        .ab-hero h1 em { font-style: normal; font-weight: 600; color: #8a9a4a; }
         .ab-hero-desc {
           font-size: 14px; font-weight: 300; line-height: 1.9;
           color: #5a5a4a; max-width: 420px; margin-bottom: 40px;
@@ -126,7 +125,7 @@ export default function AboutUs() {
           letter-spacing: 2px; text-transform: uppercase;
           border-radius: 10px; border: none; cursor: pointer;
           box-shadow: 0 6px 20px rgba(42,42,36,0.2);
-          transition: all 0.3s ease; font-family: 'Jost', sans-serif;
+          transition: all 0.3s ease; font-family: var(--font-sans);
         }
         .ab-hero-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(42,42,36,0.3); }
 
@@ -150,8 +149,8 @@ export default function AboutUs() {
           pointer-events: none;
         }
         .ab-panel-quote {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 22px; font-weight: 400; font-style: italic;
+          font-family: var(--font-sans);
+          font-size: 22px; font-weight: 400;
           color: #2a2a24; line-height: 1.6;
           margin-bottom: 24px; position: relative;
         }
@@ -160,7 +159,6 @@ export default function AboutUs() {
           font-size: 80px; line-height: 0;
           color: rgba(138,154,74,0.2);
           position: absolute; top: 20px; left: -10px;
-          font-style: italic;
         }
         .ab-panel-attr {
           font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
@@ -201,7 +199,7 @@ export default function AboutUs() {
         }
         .ab-stat:last-child { border-right: none; }
         .ab-stat-num {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: 52px; font-weight: 300;
           color: #e8d9b5; line-height: 1; letter-spacing: -2px;
           margin-bottom: 8px;
@@ -229,13 +227,13 @@ export default function AboutUs() {
           background: linear-gradient(90deg, #8a9a4a, transparent);
         }
         .ab-story-left h2 {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: clamp(34px, 3.5vw, 48px);
           font-weight: 400; color: #2a2a24;
           line-height: 1.15; letter-spacing: -0.5px;
           margin-bottom: 8px;
         }
-        .ab-story-left h2 em { font-style: italic; color: #8a9a4a; }
+        .ab-story-left h2 em { font-style: normal; font-weight: 600; color: #8a9a4a; }
         .ab-story-left p {
           font-size: 13px; font-weight: 300;
           color: #6a6a54; line-height: 1.9; margin-bottom: 20px;
@@ -282,12 +280,12 @@ export default function AboutUs() {
           text-align: center; margin-bottom: 60px;
         }
         .ab-values-header h2 {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: clamp(34px, 4vw, 52px);
           font-weight: 400; color: #2a2a24;
           letter-spacing: -0.5px; margin-top: 12px;
         }
-        .ab-values-header h2 em { font-style: italic; color: #8a9a4a; }
+        .ab-values-header h2 em { font-style: normal; font-weight: 600; color: #8a9a4a; }
         .ab-values-grid {
           display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
         }
@@ -314,7 +312,7 @@ export default function AboutUs() {
           margin-bottom: 20px; display: block;
         }
         .ab-value-title {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: 22px; font-weight: 500;
           color: #2a2a24; margin-bottom: 12px;
         }
@@ -330,12 +328,12 @@ export default function AboutUs() {
         }
         .ab-team-header { margin-bottom: 56px; }
         .ab-team-header h2 {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: clamp(34px, 4vw, 52px);
           font-weight: 400; color: #2a2a24;
           letter-spacing: -0.5px; margin-top: 12px;
         }
-        .ab-team-header h2 em { font-style: italic; color: #8a9a4a; }
+        .ab-team-header h2 em { font-style: normal; font-weight: 600; color: #8a9a4a; }
         .ab-team-grid {
           display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;
         }
@@ -356,13 +354,13 @@ export default function AboutUs() {
         .ab-team-avatar {
           width: 72px; height: 72px; border-radius: 20px;
           display: flex; align-items: center; justify-content: center;
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: 26px; font-weight: 500; color: #fff;
           margin-bottom: 24px;
           box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
         .ab-team-name {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: 22px; font-weight: 500; color: #2a2a24;
           margin-bottom: 4px;
         }
@@ -405,12 +403,12 @@ export default function AboutUs() {
           color: #8a9a4a; font-weight: 600; margin-bottom: 16px;
         }
         .ab-cta-title {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: clamp(28px, 3vw, 42px);
           font-weight: 400; color: #e8d9b5;
           line-height: 1.2; letter-spacing: -0.3px;
         }
-        .ab-cta-title em { font-style: italic; color: #c8d890; }
+        .ab-cta-title em { font-style: normal; font-weight: 600; color: #c8d890; }
         .ab-cta-right { position: relative; z-index: 1; flex-shrink: 0; }
         .ab-cta-btn {
           padding: 16px 36px;
@@ -419,7 +417,7 @@ export default function AboutUs() {
           border-radius: 12px;
           color: #e8d9b5; font-size: 11.5px; font-weight: 600;
           letter-spacing: 1.8px; text-transform: uppercase;
-          cursor: pointer; font-family: 'Jost', sans-serif;
+          cursor: pointer; font-family: var(--font-sans);
           transition: all 0.3s ease;
           white-space: nowrap;
         }

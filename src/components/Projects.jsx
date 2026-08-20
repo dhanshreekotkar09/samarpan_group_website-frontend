@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getProjects, getImageSrc } from "../api/client";
 
 // ── Import all images from assets ──
 import Int1 from "../assets/Int-1.jpg.jpeg";
@@ -20,7 +21,7 @@ import Int15 from "../assets/Int-15.jpg.jpeg";
 
 const categories = ["All", "Residential", "Commercial", "Hospitality", "Office Spaces"];
 
-const projects = [
+const staticProjects = [
   {
     id: 1,
     title: "The Kapoor Residence",
@@ -101,6 +102,15 @@ const projects = [
   },
 ];
 
+const staticImageMap = { 1: Int1, 2: Int2, 3: Int3, 4: Int4, 5: Int5, 6: Int6 };
+
+function getProjectImage(project) {
+  const legacyId = project.legacyId || project.id;
+  const apiImage = project.heroImage || project.mainImage;
+  const staticImage = staticImageMap[legacyId] || project.image;
+  return getImageSrc(apiImage) || staticImage || "";
+}
+
 const galleryItems = [
   { type: "image", label: "Living Room – Kapoor Residence", span: "wide", image: Int7 },
   { type: "image", label: "Bedroom – Mehta Villa", span: "normal", image: Int8 },
@@ -116,7 +126,18 @@ const galleryItems = [
 export default function ProjectsPage() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [lightbox, setLightbox] = useState(null);
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getProjects()
+      .then(({ data }) => {
+        setProjects(data?.length > 0 ? data : staticProjects);
+      })
+      .catch(() => setProjects(staticProjects))
+      .finally(() => setLoading(false));
+  }, []);
 
   const filtered = activeCategory === "All"
     ? projects
@@ -125,11 +146,10 @@ export default function ProjectsPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         .pj-page {
-          font-family: 'Jost', sans-serif;
+          font-family: var(--font-sans);
           background: linear-gradient(160deg, #f5f0e8 0%, #ede8d8 40%, #e8e0cc 100%);
           color: #3d3d30;
           min-height: 100vh;
@@ -160,13 +180,13 @@ export default function ProjectsPage() {
           margin-bottom: 28px;
         }
         .pj-hero h1 {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: clamp(48px, 7vw, 84px);
           font-weight: 300; line-height: 1.05;
           color: #2a2a24; letter-spacing: -2px;
           margin-bottom: 20px; max-width: 780px;
         }
-        .pj-hero h1 em { font-style: italic; color: #8a9a4a; }
+        .pj-hero h1 em { font-style: normal; font-weight: 600; color: #8a9a4a; }
         .pj-hero-sub {
           font-size: 14px; font-weight: 300; line-height: 1.9;
           color: #5a5a4a; max-width: 520px;
@@ -179,7 +199,7 @@ export default function ProjectsPage() {
         }
         .pj-stat { display: flex; flex-direction: column; gap: 4px; }
         .pj-stat-num {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: 42px; font-weight: 300; color: #2a2a24;
           line-height: 1;
         }
@@ -209,7 +229,7 @@ export default function ProjectsPage() {
           border-radius: 24px;
           border: 1.5px solid rgba(138,154,74,0.28);
           background: transparent;
-          font-family: 'Jost', sans-serif;
+          font-family: var(--font-sans);
           font-size: 11.5px; font-weight: 500; letter-spacing: 0.8px;
           color: #5a5a4a; cursor: pointer;
           transition: all 0.25s ease;
@@ -258,7 +278,7 @@ export default function ProjectsPage() {
           display: flex; align-items: center; justify-content: center;
           background: rgba(42,58,20,0.75);
           color: #c8d890;
-          font-family: 'Jost', sans-serif;
+          font-family: var(--font-sans);
           font-size: 13px; font-weight: 600; letter-spacing: 2px;
           text-transform: uppercase;
           opacity: 0;
@@ -306,7 +326,7 @@ export default function ProjectsPage() {
 
         .pj-card-body { padding: 24px; }
         .pj-card-title {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: 22px; font-weight: 500; color: #2a2a24;
           margin-bottom: 6px; letter-spacing: -0.3px;
         }
@@ -383,12 +403,12 @@ export default function ProjectsPage() {
           background: linear-gradient(90deg, #c4a96a, transparent);
         }
         .pj-gallery-title {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: clamp(32px, 4vw, 50px);
           font-weight: 300; color: #2a2010;
           letter-spacing: -1px; line-height: 1.1;
         }
-        .pj-gallery-title em { font-style: italic; color: #c4a96a; }
+        .pj-gallery-title em { font-style: normal; font-weight: 600; color: #c4a96a; }
         .pj-gallery-subtitle {
           font-size: 12.5px; font-weight: 300; color: #7a6a4a;
           max-width: 300px; line-height: 1.8;
@@ -450,14 +470,14 @@ export default function ProjectsPage() {
           gap: 20px; position: relative; z-index: 1; flex-wrap: wrap;
         }
         .pj-gallery-cta-text {
-          font-size: 13px; font-weight: 300; color: #7a6a4a; font-style: italic;
+          font-size: 13px; font-weight: 300; color: #7a6a4a;
         }
         .pj-gallery-cta-btn {
           padding: 12px 28px;
           background: transparent;
           border: 1.5px solid rgba(196,169,106,0.45);
           border-radius: 24px;
-          font-family: 'Jost', sans-serif;
+          font-family: var(--font-sans);
           font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
           text-transform: uppercase; color: #8a6a3a;
           cursor: pointer; transition: all 0.25s ease;
@@ -492,7 +512,7 @@ export default function ProjectsPage() {
           text-transform: uppercase; color: #e8c97a; margin-bottom: 10px;
         }
         .pj-lightbox-title {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: 26px; font-weight: 400; color: #f0e8d0;
           margin-bottom: 8px;
         }
@@ -509,7 +529,7 @@ export default function ProjectsPage() {
         .pj-lightbox-btn-primary {
           flex: 1; padding: 12px;
           background: linear-gradient(135deg, #c4a96a, #d4b97a);
-          color: #2a2010; font-family: 'Jost', sans-serif;
+          color: #2a2010; font-family: var(--font-sans);
           font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
           text-transform: uppercase; border: none; border-radius: 10px; cursor: pointer;
         }
@@ -517,7 +537,7 @@ export default function ProjectsPage() {
           padding: 12px 20px;
           background: rgba(196,169,106,0.1);
           border: 1px solid rgba(196,169,106,0.3);
-          color: #c4a96a; font-family: 'Jost', sans-serif;
+          color: #c4a96a; font-family: var(--font-sans);
           font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
           text-transform: uppercase; border-radius: 10px; cursor: pointer;
         }
@@ -537,12 +557,12 @@ export default function ProjectsPage() {
           color: #b8cc6a; margin-bottom: 20px;
         }
         .pj-cta-band h2 {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: clamp(32px, 4vw, 52px);
           font-weight: 300; color: #eef2e0;
           margin-bottom: 20px; letter-spacing: -1px;
         }
-        .pj-cta-band h2 em { font-style: italic; color: #b8cc6a; }
+        .pj-cta-band h2 em { font-style: normal; font-weight: 600; color: #b8cc6a; }
         .pj-cta-band p {
           font-size: 13.5px; font-weight: 300; color: #8aaa60;
           max-width: 500px; margin: 0 auto 40px; line-height: 1.9;
@@ -551,7 +571,7 @@ export default function ProjectsPage() {
         .pj-cta-primary {
           padding: 16px 40px;
           background: linear-gradient(135deg, #b8cc6a, #c8dc80);
-          color: #2a2a24; font-family: 'Jost', sans-serif;
+          color: #2a2a24; font-family: var(--font-sans);
           font-size: 11px; font-weight: 700; letter-spacing: 2px;
           text-transform: uppercase; border: none; border-radius: 12px;
           cursor: pointer; box-shadow: 0 8px 24px rgba(184,204,106,0.3);
@@ -561,7 +581,7 @@ export default function ProjectsPage() {
         .pj-cta-secondary {
           padding: 16px 40px; background: transparent;
           border: 1.5px solid rgba(184,204,106,0.4);
-          color: #b8cc6a; font-family: 'Jost', sans-serif;
+          color: #b8cc6a; font-family: var(--font-sans);
           font-size: 11px; font-weight: 600; letter-spacing: 2px;
           text-transform: uppercase; border-radius: 12px;
           cursor: pointer; transition: all 0.3s ease;
@@ -638,14 +658,18 @@ export default function ProjectsPage() {
 
         {/* ── PROJECTS GRID — each card navigates to detail page ── */}
         <div className="pj-grid">
-          {filtered.map((project) => (
+          {loading ? (
+            <p style={{ gridColumn: "1 / -1", textAlign: "center", padding: 48, color: "#8a9a6a" }}>Loading projects...</p>
+          ) : filtered.length === 0 ? (
+            <p style={{ gridColumn: "1 / -1", textAlign: "center", padding: 48, color: "#8a9a6a" }}>No projects found.</p>
+          ) : filtered.map((project) => (
             <div
-              key={project.id}
+              key={project.legacyId || project._id || project.id}
               className="pj-card"
-              onClick={() => navigate(`/projects/${project.id}`)}
+              onClick={() => navigate(`/projects/${project.legacyId || project._id || project.id}`)}
             >
               <div className="pj-card-thumb">
-                <img src={project.image} alt={project.title} />
+                <img src={getProjectImage(project)} alt={project.title} />
                 <div className="pj-card-overlay" />
                 <div className="pj-card-cat-badge">{project.category}</div>
                 <div className="pj-card-year-badge">{project.year}</div>
@@ -657,9 +681,9 @@ export default function ProjectsPage() {
                   <span>·</span>
                   <span>📐 {project.area}</span>
                 </div>
-                <div className="pj-card-desc">{project.desc}</div>
+                <div className="pj-card-desc">{project.desc || (project.overview || "").slice(0, 120)}{(project.overview || "").length > 120 ? "..." : ""}</div>
                 <div className="pj-card-tags">
-                  {project.tags.map((tag) => (
+                  {(project.tags || []).map((tag) => (
                     <span key={tag} className="pj-card-tag">{tag}</span>
                   ))}
                 </div>

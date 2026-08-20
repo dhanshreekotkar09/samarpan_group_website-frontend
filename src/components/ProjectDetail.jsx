@@ -1,5 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { getProject, getImageSrc } from "../api/client";
+import ProjectGallery from "./ProjectGallery";
+import { buildHighlights } from "../utils/projectHighlights";
+import { setPageTitle } from "../utils/pageTitle";
 
 // ── Import all images ──
 import Int1 from "../assets/Int-1.jpg.jpeg";
@@ -429,9 +433,9 @@ const projectsData = {
 export default function ProjectDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const project = projectsData[parseInt(id)];
+  const [project, setProject] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const [activeGalleryIdx, setActiveGalleryIdx] = useState(0);
   const [beforeAfterIdx, setBeforeAfterIdx] = useState(0);
   const [sliderPos, setSliderPos] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
@@ -441,7 +445,41 @@ export default function ProjectDetail() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+    setLoading(true);
+    getProject(id)
+      .then(({ data }) => {
+        const legacy = data.legacyId || parseInt(id);
+        const fallback = projectsData[legacy];
+        if (fallback) {
+          const merged = {
+            ...fallback,
+            ...data,
+            heroImage: data.heroImage || fallback.heroImage,
+            overview: data.overview || fallback.overview,
+            clientName: data.clientName || fallback.clientName,
+            media: data.media?.length ? data.media : [],
+            beforeAfter: data.beforeAfter?.length ? data.beforeAfter : fallback.beforeAfter,
+            timeline: data.timeline?.length ? data.timeline : fallback.timeline,
+            designPhilosophy: data.designPhilosophy?.length ? data.designPhilosophy : fallback.designPhilosophy,
+            testimonial: data.testimonial?.text ? data.testimonial : fallback.testimonial,
+            architect: data.architect?.name ? data.architect : fallback.architect,
+          };
+          merged.highlights = buildHighlights(merged);
+          setProject(merged);
+        } else {
+          setProject({ ...data, highlights: buildHighlights(data) });
+        }
+      })
+      .catch(() => {
+        const fallback = projectsData[parseInt(id)];
+        if (fallback) setProject(fallback);
+      })
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  useEffect(() => {
+    if (project?.title) setPageTitle(project.title);
+  }, [project?.title]);
 
   // Before/After slider logic
   const handleSliderMouseDown = (e) => {
@@ -469,12 +507,20 @@ export default function ProjectDetail() {
     };
   }, [isDragging]);
 
+  if (loading) {
+    return (
+      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "sans-serif", background: "#f5f0e8" }}>
+        <p style={{ color: "#8a9a6a" }}>Loading project...</p>
+      </div>
+    );
+  }
+
   if (!project) {
     return (
       <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "sans-serif", background: "#f5f0e8" }}>
         <div style={{ textAlign: "center" }}>
           <div style={{ fontSize: 64, marginBottom: 20 }}>🏠</div>
-          <h2 style={{ fontFamily: "Georgia, serif", fontSize: 32, color: "#2a2a24" }}>Project not found</h2>
+          <h2 style={{ fontFamily: "var(--font-sans)", fontSize: 32, color: "#2a2a24" }}>Project not found</h2>
           <button onClick={() => navigate("/projects")} style={{ marginTop: 24, padding: "12px 32px", background: "#3d4a1f", color: "#e8d9b5", border: "none", borderRadius: 12, cursor: "pointer", fontSize: 14 }}>
             ← Back to Projects
           </button>
@@ -483,16 +529,18 @@ export default function ProjectDetail() {
     );
   }
 
-  const ba = project.beforeAfter[beforeAfterIdx];
+  const ba = project.beforeAfter?.[beforeAfterIdx];
+  const resolveImg = (url) => getImageSrc(url) || url || "";
+  const heroImage = resolveImg(project.heroImage || project.mainImage);
+  const accentColor = project.accentColor || project.accent || "#8a9a4a";
 
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         .pd-page {
-          font-family: 'Jost', sans-serif;
+          font-family: var(--font-sans);
           background: linear-gradient(160deg, #f5f0e8 0%, #ede8d8 40%, #e8e0cc 100%);
           color: #3d3d30;
           min-height: 100vh;
@@ -511,7 +559,7 @@ export default function ProjectDetail() {
         .pd-back-btn {
           display: flex; align-items: center; gap: 10px;
           background: none; border: none;
-          font-family: 'Jost', sans-serif;
+          font-family: var(--font-sans);
           font-size: 12px; font-weight: 600; letter-spacing: 1.5px;
           text-transform: uppercase; color: #4a5a1f;
           cursor: pointer; transition: gap 0.2s ease;
@@ -566,13 +614,13 @@ export default function ProjectDetail() {
           backdrop-filter: blur(8px);
         }
         .pd-hero-title {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: clamp(40px, 6vw, 72px);
           font-weight: 300; line-height: 1.05;
           color: #f5f0e8; letter-spacing: -2px;
           margin-bottom: 12px; max-width: 700px;
         }
-        .pd-hero-title em { font-style: italic; color: #c8d890; }
+        .pd-hero-title em { font-style: normal; font-weight: 600; color: #c8d890; }
         .pd-hero-subtitle {
           font-size: 14px; font-weight: 300; color: rgba(245,240,232,0.7);
           max-width: 500px; line-height: 1.8;
@@ -599,7 +647,7 @@ export default function ProjectDetail() {
           text-transform: uppercase; color: #8a9a4a; margin-bottom: 2px;
         }
         .pd-highlight-value {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: 16px; font-weight: 400; color: #e0ecb0;
         }
 
@@ -616,13 +664,13 @@ export default function ProjectDetail() {
           background: linear-gradient(90deg, #8a9a4a, transparent);
         }
         .pd-section-title {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: clamp(32px, 4vw, 48px);
           font-weight: 300; color: #2a2a24;
           letter-spacing: -1px; line-height: 1.1;
           margin-bottom: 28px;
         }
-        .pd-section-title em { font-style: italic; color: #8a9a4a; }
+        .pd-section-title em { font-style: normal; font-weight: 600; color: #8a9a4a; }
 
         /* ── OVERVIEW ── */
         .pd-overview-grid {
@@ -666,7 +714,7 @@ export default function ProjectDetail() {
           font-size: 28px; margin-bottom: 16px;
         }
         .pd-architect-name {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: 22px; font-weight: 500; color: #e0ecb0;
           margin-bottom: 4px;
         }
@@ -681,8 +729,8 @@ export default function ProjectDetail() {
           height: 1px; background: rgba(184,204,106,0.15); margin: 16px 0;
         }
         .pd-architect-quote {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 15px; font-style: italic; font-weight: 300;
+          font-family: var(--font-sans);
+          font-size: 15px; font-weight: 300;
           color: #c0d890; line-height: 1.7;
         }
         .pd-architect-quote::before { content: '"'; font-size: 24px; color: #8a9a4a; }
@@ -734,7 +782,7 @@ export default function ProjectDetail() {
           border-radius: 20px;
           border: 1.5px solid rgba(138,154,74,0.28);
           background: transparent;
-          font-family: 'Jost', sans-serif;
+          font-family: var(--font-sans);
           font-size: 11px; font-weight: 500; letter-spacing: 0.8px;
           color: #5a5a4a; cursor: pointer; transition: all 0.2s ease;
         }
@@ -801,7 +849,7 @@ export default function ProjectDetail() {
           background: linear-gradient(135deg, #2a3a14, #3d4a1f);
           border: 2px solid rgba(184,204,106,0.3);
           display: flex; align-items: center; justify-content: center;
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: 18px; font-weight: 300; color: #c8d890;
           position: relative; z-index: 1;
           box-shadow: 0 0 0 6px rgba(245,240,232,1);
@@ -814,7 +862,7 @@ export default function ProjectDetail() {
           gap: 12px; margin-bottom: 8px;
         }
         .pd-timeline-title {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: 20px; font-weight: 500; color: #2a2a24;
         }
         .pd-timeline-duration {
@@ -845,7 +893,7 @@ export default function ProjectDetail() {
           border-color: rgba(138,154,74,0.3);
         }
         .pd-philosophy-num {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: 36px; font-weight: 300; color: rgba(138,154,74,0.3);
           line-height: 1; margin-bottom: 8px;
         }
@@ -868,7 +916,7 @@ export default function ProjectDetail() {
         .pd-testimonial::before {
           content: '"';
           position: absolute; top: -20px; left: 40px;
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: 200px; font-weight: 300;
           color: rgba(184,204,106,0.06); line-height: 1;
           pointer-events: none;
@@ -877,9 +925,9 @@ export default function ProjectDetail() {
           font-size: 20px; margin-bottom: 24px; letter-spacing: 4px;
         }
         .pd-testimonial-text {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: clamp(18px, 2.5vw, 24px);
-          font-weight: 300; font-style: italic;
+          font-weight: 400;
           color: #e0ecb0; line-height: 1.8;
           max-width: 760px; margin: 0 auto 32px;
           position: relative; z-index: 1;
@@ -902,12 +950,12 @@ export default function ProjectDetail() {
           gap: 40px; flex-wrap: wrap;
         }
         .pd-enquiry-left h2 {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: clamp(28px, 4vw, 44px);
           font-weight: 300; color: #2a2a24;
           letter-spacing: -1px; margin-bottom: 10px;
         }
-        .pd-enquiry-left h2 em { font-style: italic; color: #8a9a4a; }
+        .pd-enquiry-left h2 em { font-style: normal; font-weight: 600; color: #8a9a4a; }
         .pd-enquiry-left p {
           font-size: 13px; font-weight: 300; color: #5a5a4a;
           line-height: 1.8; max-width: 420px;
@@ -916,7 +964,7 @@ export default function ProjectDetail() {
         .pd-enquiry-primary {
           padding: 16px 36px;
           background: linear-gradient(135deg, #2a3a14, #3d4a1f);
-          color: #c8d890; font-family: 'Jost', sans-serif;
+          color: #c8d890; font-family: var(--font-sans);
           font-size: 11px; font-weight: 700; letter-spacing: 2px;
           text-transform: uppercase; border: none; border-radius: 12px;
           cursor: pointer; box-shadow: 0 8px 24px rgba(42,58,20,0.25);
@@ -927,7 +975,7 @@ export default function ProjectDetail() {
           padding: 16px 36px;
           background: transparent;
           border: 1.5px solid rgba(138,154,74,0.35);
-          color: #4a5a1f; font-family: 'Jost', sans-serif;
+          color: #4a5a1f; font-family: var(--font-sans);
           font-size: 11px; font-weight: 600; letter-spacing: 2px;
           text-transform: uppercase; border-radius: 12px;
           cursor: pointer; transition: all 0.3s ease;
@@ -958,7 +1006,7 @@ export default function ProjectDetail() {
           display: flex; align-items: flex-start; justify-content: space-between;
         }
         .pd-modal-header h3 {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: 28px; font-weight: 300; color: #e0ecb0;
           letter-spacing: -0.5px;
         }
@@ -988,7 +1036,7 @@ export default function ProjectDetail() {
           background: rgba(255,252,245,0.9);
           border: 1.5px solid rgba(138,154,74,0.2);
           border-radius: 10px;
-          font-family: 'Jost', sans-serif;
+          font-family: var(--font-sans);
           font-size: 13px; font-weight: 300; color: #2a2a24;
           outline: none; transition: border-color 0.2s ease;
         }
@@ -997,7 +1045,7 @@ export default function ProjectDetail() {
         .pd-modal-submit {
           width: 100%; padding: 15px;
           background: linear-gradient(135deg, #2a3a14, #3d4a1f);
-          color: #c8d890; font-family: 'Jost', sans-serif;
+          color: #c8d890; font-family: var(--font-sans);
           font-size: 11px; font-weight: 700; letter-spacing: 2px;
           text-transform: uppercase; border: none; border-radius: 12px;
           cursor: pointer; margin-top: 8px;
@@ -1038,7 +1086,7 @@ export default function ProjectDetail() {
 
         {/* ── HERO ── */}
         <div className="pd-hero">
-          <img src={project.heroImage} alt={project.title} />
+          <img src={heroImage} alt={project.title} />
           <div className="pd-hero-overlay" />
           <div className="pd-hero-content">
             <div className="pd-hero-eyebrow">
@@ -1059,7 +1107,7 @@ export default function ProjectDetail() {
 
         {/* ── HIGHLIGHTS BAR ── */}
         <div className="pd-highlights">
-          {project.highlights.map((h, i) => (
+          {(project.highlights || []).map((h, i) => (
             <div key={i} className="pd-highlight-item">
               <div className="pd-highlight-icon">{h.icon}</div>
               <div>
@@ -1078,13 +1126,14 @@ export default function ProjectDetail() {
               <h2 className="pd-section-title">About this <em>Project</em></h2>
               <p className="pd-overview-text">{project.overview}</p>
               <div className="pd-overview-tags">
-                {project.tags.map((t) => (
+                {(project.tags || []).map((t) => (
                   <span key={t} className="pd-overview-tag">{t}</span>
                 ))}
               </div>
             </div>
 
             {/* ARCHITECT CARD */}
+            {project.architect?.name && (
             <div className="pd-architect-card">
               <div className="pd-architect-avatar">👷</div>
               <div className="pd-architect-name">{project.architect.name}</div>
@@ -1093,6 +1142,7 @@ export default function ProjectDetail() {
               <div className="pd-architect-sep" />
               <div className="pd-architect-quote">{project.architect.quote}</div>
             </div>
+            )}
           </div>
         </div>
 
@@ -1100,24 +1150,17 @@ export default function ProjectDetail() {
         <div className="pd-section" style={{ paddingTop: 0 }}>
           <div className="pd-section-label">Project Gallery</div>
           <h2 className="pd-section-title">Visual <em>Walkthrough</em></h2>
-          <div className="pd-gallery-main">
-            <img src={project.gallery[activeGalleryIdx].image} alt={project.gallery[activeGalleryIdx].caption} />
-            <div className="pd-gallery-main-caption">{project.gallery[activeGalleryIdx].caption}</div>
-          </div>
-          <div className="pd-gallery-thumbs">
-            {project.gallery.map((item, i) => (
-              <div
-                key={i}
-                className={`pd-gallery-thumb ${i === activeGalleryIdx ? "active" : ""}`}
-                onClick={() => setActiveGalleryIdx(i)}
-              >
-                <img src={item.image} alt={item.caption} />
-              </div>
-            ))}
-          </div>
+          {heroImage && (
+            <div className="pd-gallery-main" style={{ marginBottom: 24 }}>
+              <img src={heroImage} alt={project.title} />
+              <div className="pd-gallery-main-caption">{project.title}</div>
+            </div>
+          )}
+          <ProjectGallery media={project.media || []} gallery={project.gallery} accentColor={accentColor} />
         </div>
 
         {/* ── BEFORE / AFTER ── */}
+        {(project.beforeAfter?.length > 0) && (
         <div className="pd-section" style={{ paddingTop: 0 }}>
           <div className="pd-section-label">Transformation</div>
           <h2 className="pd-section-title">Before & <em>After</em></h2>
@@ -1141,11 +1184,11 @@ export default function ProjectDetail() {
             >
               {/* AFTER (base) */}
               <div className="pd-ba-after">
-                <img src={ba.after} alt="After" />
+                <img src={resolveImg(ba.after)} alt="After" />
               </div>
               {/* BEFORE (clipped) */}
               <div className="pd-ba-before" style={{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}>
-                <img src={ba.before} alt="Before" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <img src={resolveImg(ba.before)} alt="Before" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
               {/* HANDLE */}
               <div className="pd-ba-handle" style={{ left: `${sliderPos}%` }}>
@@ -1160,8 +1203,10 @@ export default function ProjectDetail() {
             </p>
           </div>
         </div>
+        )}
 
         {/* ── DESIGN PHILOSOPHY ── */}
+        {(project.designPhilosophy?.length > 0) && (
         <div className="pd-section" style={{ paddingTop: 0 }}>
           <div className="pd-section-label">Design Approach</div>
           <h2 className="pd-section-title">Our Design <em>Philosophy</em></h2>
@@ -1175,8 +1220,10 @@ export default function ProjectDetail() {
             ))}
           </div>
         </div>
+        )}
 
         {/* ── TIMELINE ── */}
+        {(project.timeline?.length > 0) && (
         <div className="pd-section" style={{ paddingTop: 0 }}>
           <div className="pd-section-label">Project Journey</div>
           <h2 className="pd-section-title">How We <em>Worked</em></h2>
@@ -1195,20 +1242,23 @@ export default function ProjectDetail() {
             ))}
           </div>
         </div>
+        )}
 
         {/* ── TESTIMONIAL ── */}
+        {project.testimonial?.text && (
         <div className="pd-section" style={{ paddingTop: 0 }}>
           <div className="pd-section-label">Client Voice</div>
           <h2 className="pd-section-title">What Our <em>Client Said</em></h2>
           <div className="pd-testimonial">
             <div className="pd-testimonial-stars">
-              {"★".repeat(project.testimonial.rating)}
+              {"★".repeat(project.testimonial.rating || 5)}
             </div>
             <p className="pd-testimonial-text">"{project.testimonial.text}"</p>
             <div className="pd-testimonial-author">{project.testimonial.author}</div>
             <div className="pd-testimonial-role">{project.testimonial.role}</div>
           </div>
         </div>
+        )}
 
         {/* ── ENQUIRY CTA ── */}
         <div className="pd-enquiry-band">

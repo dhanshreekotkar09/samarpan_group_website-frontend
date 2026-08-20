@@ -1,15 +1,21 @@
 import logo from "../assets/sg_logo.jpg";
 
 const FooterLinks = {
-  Services: [
-    "Interior Design",
-    "Space Planning",
-    "Furniture Styling",
-    "Lighting Design",
-    "3D Visualization",
-    "Color Consultation",
-  ],
-  Portfolio: ["Residential", "Commercial", "Hospitality", "Office Spaces", "Before & After"],
+  Services: {
+    Civil: [
+      "Structural Excellence",
+      "Foundation to Finish",
+      "Engineered with Precision",
+      "Turnkey Construction",
+    ],
+    Interior: [
+      "Bespoke Interiors",
+      "Functional Elegance",
+      "3D Visualized Design",
+      "Crafted With Detail",
+    ],
+  },
+  Portfolio: ["Residential", "Commercial", "Hospitality", "Office Spaces"],
   Company: ["About Us", "Our Process", "Meet The Team", "Careers", "Press & Media", "Contact Us"],
 };
 
@@ -35,15 +41,6 @@ const SocialLinks = [
     ),
   },
   {
-    name: "LinkedIn",
-    href: "#",
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-      </svg>
-    ),
-  },
-  {
     name: "WhatsApp",
     href: "https://wa.me/918055587237",
     icon: (
@@ -57,9 +54,19 @@ const SocialLinks = [
 const contactItems = [
   { icon: "📍", label: "Office", value: "Office No. 1, Deepjyot Apartment,\nHanumanwadi, Makhmalabad Road,\nPanchavati, Nashik – 422003" },
   { icon: "📞", label: "Phone", value: "+91 80555 87237", href: "tel:+918055587237" },
-  { icon: "✉️", label: "Email", value: "official.samarpan.group@gmail.com", href: "https://mail.google.com/mail/?view=cm&to=official.samarpan.group@gmail.com" },
+  { icon: "✉️", label: "Email", value: "thesamarpaninteriors@gmail.com", href: "https://mail.google.com/mail/?view=cm&to=thesamarpaninteriors@gmail.com" },
   { icon: "📸", label: "Instagram", value: "@Samarpan_Group_Interiors", href: "https://www.instagram.com/samarpan_group_interiors?igsh=dmlvb2R5YzRiNmhw" },
-  { icon: "🕐", label: "Hours", value: "Mon–Sat: 9am – 6pm" },
+  {
+    icon: (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="#b8cc6a">
+        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+      </svg>
+    ),
+    label: "Facebook",
+    value: "Samarpan Group Interiors",
+    href: "https://www.facebook.com/share/1B978MBdLy/",
+  },
+  { icon: "🕐", label: "Hours", value: "Mon–Fri: 9am – 5pm\nSaturday: 9am – 3pm\nSunday: Closed" },
 ];
 
 const legalLinks = ["Privacy Policy", "Terms of Service", "Cookie Policy", "Sitemap"];
@@ -68,12 +75,11 @@ export default function SamarpanFooter() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         .sg-footer {
           background: #3a4a20;
-          font-family: 'Jost', sans-serif;
+          font-family: var(--font-sans);
           color: #c8d898;
         }
 
@@ -89,14 +95,14 @@ export default function SamarpanFooter() {
           flex-wrap: wrap;
         }
         .sg-banner-text h2 {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: clamp(26px, 3.5vw, 38px);
           font-weight: 400;
           color: #eef2e0;
           letter-spacing: -0.5px;
           margin-bottom: 8px;
         }
-        .sg-banner-text h2 em { font-style: italic; color: #c8dc80; }
+        .sg-banner-text h2 em { font-style: normal; font-weight: 600; color: #c8dc80; }
         .sg-banner-text p { font-size: 13px; font-weight: 300; color: #a8bc78; letter-spacing: 0.3px; }
         .sg-banner-btn {
           padding: 14px 32px;
@@ -126,7 +132,7 @@ export default function SamarpanFooter() {
 
         .sg-grid {
           display: grid;
-          grid-template-columns: 2fr 1fr 1fr 1fr 1.4fr;
+          grid-template-columns: minmax(380px, 2.4fr) 1fr 1fr 1fr 1.3fr;
           gap: 48px;
           padding-bottom: 56px;
           border-bottom: 1px solid rgba(184,204,106,0.15);
@@ -147,7 +153,7 @@ export default function SamarpanFooter() {
           overflow: hidden;
         }
         .sg-logo-name {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-sans);
           font-size: 22px;
           font-weight: 600;
           color: #eef2e0;
@@ -159,7 +165,6 @@ export default function SamarpanFooter() {
           letter-spacing: 2px;
           color: #b8cc6a;
           text-transform: uppercase;
-          font-style: italic;
           display: block;
           margin-top: 3px;
         }
@@ -169,9 +174,15 @@ export default function SamarpanFooter() {
           color: #b0c488;
           font-weight: 300;
           margin-bottom: 24px;
-          max-width: 260px;
+          max-width: 420px;
         }
-        .sg-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+        .sg-badges {
+          display: grid;
+          grid-template-columns: max-content max-content;
+          justify-content: start;
+          gap: 8px 10px;
+          margin-bottom: 28px;
+        }
         .sg-badge {
           padding: 5px 12px;
           background: rgba(184,204,106,0.12);
@@ -179,9 +190,11 @@ export default function SamarpanFooter() {
           border-radius: 20px;
           font-size: 9px;
           font-weight: 600;
-          letter-spacing: 1.5px;
+          letter-spacing: 1.2px;
           text-transform: uppercase;
           color: #b8cc6a;
+          white-space: nowrap;
+          width: fit-content;
         }
         .sg-socials { display: flex; gap: 10px; }
         .sg-social {
@@ -242,6 +255,15 @@ export default function SamarpanFooter() {
           color: #b8cc6a;
         }
         .sg-link:hover::before { opacity: 1; }
+        .sg-service-group {
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 1.6px;
+          text-transform: uppercase;
+          color: #b8cc6a;
+          margin: 4px 0 10px;
+        }
+        .sg-service-group:not(:first-child) { margin-top: 18px; }
 
         /* ── CONTACT COL ── */
         .sg-contacts { display: flex; flex-direction: column; gap: 16px; }
@@ -312,7 +334,7 @@ export default function SamarpanFooter() {
           border: none;
           outline: none;
           color: #ddf0a0;
-          font-family: 'Jost', sans-serif;
+          font-family: var(--font-sans);
         }
         .sg-nl-input::placeholder { color: #7a9060; }
         .sg-nl-btn {
@@ -326,7 +348,7 @@ export default function SamarpanFooter() {
           border: none;
           cursor: pointer;
           transition: all 0.3s ease;
-          font-family: 'Jost', sans-serif;
+          font-family: var(--font-sans);
           white-space: nowrap;
         }
         .sg-nl-btn:hover { background: linear-gradient(135deg, #c9a84c, #e8c97a); color: #2a2a1a; }
@@ -403,12 +425,12 @@ export default function SamarpanFooter() {
               </div>
 
               <p className="sg-desc">
-                A dedication to your dream home — we transform your space into a true home
-                through the perfect harmony of beauty and functionality.
+                True to our name, Samarpan is our commitment to your dream space —
+                transforming every corner through thoughtful engineering and elegant interior design.
               </p>
 
               <div className="sg-badges">
-                {["Premium Interiors", "Trusted Since 2016", "Nashik's Finest"].map((b) => (
+                {["Trusted Since 2016", "End to End Solutions", "Civil & Interior Experts", "Samarpan Assured Quality", "Nashik's Finest"].map((b) => (
                   <span key={b} className="sg-badge">✦ {b}</span>
                 ))}
               </div>
@@ -424,13 +446,28 @@ export default function SamarpanFooter() {
             {Object.entries(FooterLinks).map(([title, links]) => (
               <div key={title}>
                 <div className="sg-col-title">{title}</div>
-                <ul className="sg-links">
-                  {links.map((link) => (
-                    <li key={link}>
-                      <a href="#" className="sg-link">{link}</a>
-                    </li>
-                  ))}
-                </ul>
+                {Array.isArray(links) ? (
+                  <ul className="sg-links">
+                    {links.map((link) => (
+                      <li key={link}>
+                        <a href="#" className="sg-link">{link}</a>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  Object.entries(links).map(([group, items]) => (
+                    <div key={group}>
+                      <p className="sg-service-group">{group}</p>
+                      <ul className="sg-links">
+                        {items.map((link) => (
+                          <li key={link}>
+                            <a href="#" className="sg-link">{link}</a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))
+                )}
               </div>
             ))}
 

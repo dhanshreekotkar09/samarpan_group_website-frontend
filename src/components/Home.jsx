@@ -1,4 +1,6 @@
 export default function Home() {
+  const font = "var(--font-sans)";
+
   const styles = {
     hero: {
       minHeight: "90vh",
@@ -35,7 +37,7 @@ export default function Home() {
 
     heroContent: {
       textAlign: "center",
-      maxWidth: "700px",
+      maxWidth: "860px",
       position: "relative",
       zIndex: 1,
     },
@@ -53,33 +55,52 @@ export default function Home() {
       textTransform: "uppercase",
       color: "#4a5a1f",
       marginBottom: "32px",
-      fontFamily: "'Jost', sans-serif",
+      fontFamily: font,
+      fontWeight: 600,
     },
 
     heroHeadline: {
-      fontFamily: "'Cormorant Garamond', serif",
-      fontSize: "clamp(48px, 7vw, 80px)",
-      fontWeight: 300,
-      lineHeight: 1.1,
+      fontFamily: font,
+      fontSize: "clamp(36px, 5.4vw, 64px)",
+      fontWeight: 700,
+      lineHeight: 1.15,
       color: "#2a2a24",
-      marginBottom: "24px",
-      letterSpacing: "-1px",
+      marginBottom: "12px",
+      letterSpacing: "-0.6px",
     },
 
     heroAccent: {
-      fontStyle: "italic",
-      color: "#8a9a4a",
+      color: "#6b7c32",
+    },
+
+    heroMarathi: {
+      fontFamily: font,
+      fontSize: "16px",
+      fontWeight: 500,
+      lineHeight: 1.7,
+      color: "#6a6a52",
+      marginBottom: "28px",
     },
 
     heroPara: {
-      fontFamily: "'Jost', sans-serif",
-      fontSize: "14px",
-      lineHeight: 1.8,
+      fontFamily: font,
+      fontSize: "16px",
+      lineHeight: 1.75,
       color: "#5a5a4a",
-      maxWidth: "500px",
+      maxWidth: "640px",
+      margin: "0 auto 8px",
+      letterSpacing: "0.1px",
+      fontWeight: 400,
+    },
+
+    heroParaMr: {
+      fontFamily: font,
+      fontSize: "15px",
+      lineHeight: 1.8,
+      color: "#6a6a52",
+      maxWidth: "640px",
       margin: "0 auto 48px",
-      letterSpacing: "0.3px",
-      fontWeight: 300,
+      fontWeight: 400,
     },
 
     heroBtns: {
@@ -102,7 +123,7 @@ export default function Home() {
       cursor: "pointer",
       boxShadow: "0 8px 24px rgba(42,42,36,0.25)",
       transition: "all 0.3s ease",
-      fontFamily: "'Jost', sans-serif",
+      fontFamily: font,
     },
 
     heroBtnSecondary: {
@@ -110,14 +131,14 @@ export default function Home() {
       background: "transparent",
       color: "#3d3d30",
       fontSize: "11px",
-      fontWeight: 500,
+      fontWeight: 600,
       letterSpacing: "2px",
       textTransform: "uppercase",
       borderRadius: "10px",
       border: "1.5px solid rgba(42,42,36,0.3)",
       cursor: "pointer",
       transition: "all 0.3s ease",
-      fontFamily: "'Jost', sans-serif",
+      fontFamily: font,
     },
   };
 
@@ -129,7 +150,6 @@ export default function Home() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap');
         .hero-btn-primary:hover {
           transform: translateY(-2px);
           box-shadow: 0 12px 32px rgba(42,42,36,0.35) !important;
@@ -149,20 +169,25 @@ export default function Home() {
         <div style={styles.heroContent}>
           <div style={styles.heroLabel}>
             <span>✦</span>
-            <span>Luxury Interior Design</span>
+            <span>Civil & Interior Solution</span>
             <span>✦</span>
           </div>
 
           <h1 style={styles.heroHeadline}>
-            Spaces that{" "}
-            <span style={styles.heroAccent}>Breathe</span>
-            {" & "}
-            <span style={styles.heroAccent}>Inspire</span>
+            Spaces Crafted with{" "}
+            <span style={styles.heroAccent}>Pure Samarpan</span>
           </h1>
+          <p style={styles.heroMarathi}>
+            अत्यंत निष्ठेने आणि समर्पणाने साकारलेली वास्तु
+          </p>
 
           <p style={styles.heroPara}>
-            We craft timeless interiors that reflect your personality — where every corner
-            tells a story of elegance and purpose.
+            From strong foundations to refined interiors, we dedicate our expertise
+            to crafting spaces that inspire and last a lifetime.
+          </p>
+          <p style={styles.heroParaMr}>
+            भक्कम पायाभरणीपासून ते सुंदर इंटिरिअरपर्यंत, आम्ही तुमच्या स्वप्नातील
+            वास्तू साकारण्यासाठी पूर्ण समर्पित आहोत.
           </p>
 
           <div style={styles.heroBtns}>
