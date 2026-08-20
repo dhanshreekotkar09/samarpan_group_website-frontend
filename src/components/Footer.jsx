@@ -322,8 +322,8 @@ export default function SamarpanFooter() {
           overflow: hidden;
           border: 1px solid rgba(184,204,106,0.3);
           background: rgba(70,88,42,0.6);
-          min-width: 340px;
-          flex-shrink: 0;
+          min-width: 0;
+          width: 100%;
         }
         .sg-nl-input {
           flex: 1;

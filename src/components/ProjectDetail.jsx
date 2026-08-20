@@ -544,17 +544,22 @@ export default function ProjectDetail() {
           background: linear-gradient(160deg, #f5f0e8 0%, #ede8d8 40%, #e8e0cc 100%);
           color: #3d3d30;
           min-height: 100vh;
+          overflow-x: hidden;
+          max-width: 100%;
         }
 
         /* ── BACK BAR ── */
         .pd-topbar {
-          position: sticky; top: 0; z-index: 100;
+          position: sticky; top: 0; z-index: 20;
           background: rgba(245,240,232,0.92);
           backdrop-filter: blur(12px);
           border-bottom: 1px solid rgba(138,154,74,0.15);
           padding: 0 60px;
           display: flex; align-items: center; justify-content: space-between;
           height: 64px;
+          gap: 12px;
+          max-width: 100%;
+          box-sizing: border-box;
         }
         .pd-back-btn {
           display: flex; align-items: center; gap: 10px;
@@ -604,7 +609,7 @@ export default function ProjectDetail() {
           max-width: 1300px; margin: 0 auto;
         }
         .pd-hero-eyebrow {
-          display: inline-flex; align-items: center; gap: 8px;
+          display: inline-flex; align-items: center; gap: 10px;
           padding: 5px 16px;
           background: rgba(255,255,255,0.1);
           border: 1px solid rgba(255,255,255,0.2);
@@ -612,7 +617,11 @@ export default function ProjectDetail() {
           font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase;
           color: rgba(255,255,255,0.8); margin-bottom: 20px;
           backdrop-filter: blur(8px);
+          max-width: 100%;
+          flex-wrap: wrap;
         }
+        .pd-hero-chip { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+        .pd-hero-meta { opacity: 0.85; }
         .pd-hero-title {
           font-family: var(--font-sans);
           font-size: clamp(40px, 6vw, 72px);
@@ -632,13 +641,15 @@ export default function ProjectDetail() {
           padding: 28px 60px;
           display: flex; align-items: center; justify-content: center;
           gap: 0; flex-wrap: wrap;
-          overflow-x: auto;
+          overflow-x: hidden;
+          max-width: 100%;
+          box-sizing: border-box;
         }
         .pd-highlight-item {
           display: flex; align-items: center; gap: 12px;
           padding: 0 36px;
           border-right: 1px solid rgba(184,204,106,0.2);
-          flex-shrink: 0;
+          min-width: 0;
         }
         .pd-highlight-item:last-child { border-right: none; }
         .pd-highlight-icon { font-size: 20px; }
@@ -1060,7 +1071,29 @@ export default function ProjectDetail() {
           .pd-gallery-thumbs { grid-template-columns: repeat(3, 1fr); }
         }
         @media (max-width: 720px) {
+          .pd-hero { height: 58vh; min-height: 380px; }
           .pd-topbar, .pd-hero-content, .pd-section, .pd-highlights, .pd-enquiry-band { padding-left: 20px; padding-right: 20px; }
+          .pd-hero-content { padding-bottom: 32px; padding-top: 28px; }
+          .pd-hero-eyebrow {
+            flex-direction: column; align-items: flex-start; gap: 8px;
+            padding: 0; margin-bottom: 14px;
+            background: none; border: none; backdrop-filter: none; border-radius: 0;
+          }
+          .pd-hero-chip {
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.14);
+            border: 1px solid rgba(255,255,255,0.22);
+            border-radius: 999px;
+            backdrop-filter: blur(8px);
+            font-size: 8px; letter-spacing: 1.6px;
+          }
+          .pd-hero-meta {
+            padding-left: 2px;
+            font-size: 10px; letter-spacing: 1.4px;
+            color: rgba(255,255,255,0.72);
+            line-height: 1.5;
+          }
+          .pd-hero-title { font-size: 32px; letter-spacing: -0.6px; line-height: 1.12; }
           .pd-highlights { gap: 8px; }
           .pd-highlight-item { padding: 0 16px; border-right: none; border-bottom: 1px solid rgba(184,204,106,0.15); padding-bottom: 16px; }
           .pd-philosophy-grid { grid-template-columns: 1fr; }
@@ -1090,12 +1123,10 @@ export default function ProjectDetail() {
           <div className="pd-hero-overlay" />
           <div className="pd-hero-content">
             <div className="pd-hero-eyebrow">
-              <span>✦</span>
-              <span>{project.category}</span>
-              <span>·</span>
-              <span>{project.year}</span>
-              <span>·</span>
-              <span>{project.location}</span>
+              <span className="pd-hero-chip">✦ {project.category}</span>
+              <span className="pd-hero-meta">
+                {[project.year, project.location].filter(Boolean).join("  ·  ")}
+              </span>
             </div>
             <h1 className="pd-hero-title">
               {project.title.split(" ").slice(0, -1).join(" ")}{" "}

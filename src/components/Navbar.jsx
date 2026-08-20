@@ -86,6 +86,38 @@ export default function SamarpanNavbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    setMobileOpen(false);
+    setMobileExpanded(null);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const scrollY = window.scrollY;
+    const body = document.body;
+    const html = document.documentElement;
+    const prev = {
+      bodyOverflow: body.style.overflow,
+      bodyPosition: body.style.position,
+      bodyTop: body.style.top,
+      bodyWidth: body.style.width,
+      htmlOverflow: html.style.overflow,
+    };
+    body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.width = "100%";
+    html.style.overflow = "hidden";
+    return () => {
+      body.style.overflow = prev.bodyOverflow;
+      body.style.position = prev.bodyPosition;
+      body.style.top = prev.bodyTop;
+      body.style.width = prev.bodyWidth;
+      html.style.overflow = prev.htmlOverflow;
+      window.scrollTo(0, scrollY);
+    };
+  }, [mobileOpen]);
+
   const handleNavClick = (link) => {
     setActiveDropdown(null);
     const isDedicatedPage = link.path && link.path !== "/";
@@ -169,8 +201,9 @@ export default function SamarpanNavbar() {
       maxWidth: "1300px", margin: "0 auto", padding: "0 40px",
       display: "flex", alignItems: "center", justifyContent: "space-between",
       height: scrolled ? "64px" : "76px", transition: "height 0.4s ease",
+      width: "100%", minWidth: 0, boxSizing: "border-box",
     },
-    logoWrap: { display: "flex", alignItems: "center", gap: "12px", textDecoration: "none", cursor: "pointer" },
+    logoWrap: { display: "flex", alignItems: "center", gap: "12px", textDecoration: "none", cursor: "pointer", minWidth: 0, flex: 1 },
     logoIconWrap: {
       width: scrolled ? "38px" : "46px",
       height: scrolled ? "38px" : "46px",
@@ -181,7 +214,7 @@ export default function SamarpanNavbar() {
       boxShadow: "0 4px 12px rgba(42,42,36,0.2)",
       overflow: "hidden",
     },
-    logoText: { display: "flex", flexDirection: "column", lineHeight: 1 },
+    logoText: { display: "flex", flexDirection: "column", lineHeight: 1, minWidth: 0 },
     logoMain: {
       fontFamily: "var(--font-sans)",
       fontSize: scrolled ? "18px" : "22px", fontWeight: 600,
@@ -246,15 +279,17 @@ export default function SamarpanNavbar() {
     bottomAccent: { height: "1px", background: "linear-gradient(90deg, transparent 0%, rgba(138,154,74,0.4) 30%, rgba(200,184,154,0.6) 50%, rgba(138,154,74,0.4) 70%, transparent 100%)" },
 
     overlay: {
-      position: "fixed", inset: 0, zIndex: 40,
+      position: "fixed", inset: 0, zIndex: 2000,
       background: "rgba(42,42,36,0.5)", backdropFilter: "blur(4px)",
       transition: "opacity 0.4s ease",
       opacity: mobileOpen ? 1 : 0,
       pointerEvents: mobileOpen ? "auto" : "none",
+      touchAction: "none",
+      overscrollBehavior: "none",
     },
     drawer: {
       position: "fixed", top: 0, right: 0, bottom: 0, width: "300px",
-      background: "#faf7f0", zIndex: 50,
+      background: "#faf7f0", zIndex: 2010,
       transform: mobileOpen ? "translateX(0)" : "translateX(100%)",
       transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
       display: "flex", flexDirection: "column", overflowY: "auto",
@@ -348,7 +383,8 @@ export default function SamarpanNavbar() {
         }
         @media (max-width: 640px) {
           .top-bar          { display: none !important; }
-          .nav-inner        { padding: 0 20px !important; }
+          .nav-inner        { padding: 0 16px !important; width: 100% !important; }
+          .logo-sub         { letter-spacing: 0.4px !important; font-size: 8px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
         }
       `}</style>
 
@@ -404,9 +440,9 @@ export default function SamarpanNavbar() {
                   style={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: "10px" }}
                 />
               </div>
-              <div style={s.logoText}>
+              <div className="logo-text" style={s.logoText}>
                 <span style={s.logoMain}>Samarpan Group</span>
-                <span style={s.logoSub}>Swapnatil Gharasathi Ek Samarpan</span>
+                <span className="logo-sub" style={s.logoSub}>Swapnatil Gharasathi Ek Samarpan</span>
               </div>
             </div>
 
