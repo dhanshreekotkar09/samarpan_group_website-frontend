@@ -196,7 +196,7 @@ export default function Home() {
               style={styles.heroBtnPrimary}
               onClick={() => smoothScroll("#projects")}
             >
-              Explore Portfolio →
+              Explore Projects →
             </button>
             <button
               className="hero-btn-secondary"

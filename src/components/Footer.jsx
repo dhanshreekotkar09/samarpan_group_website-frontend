@@ -1,23 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import logo from "../assets/sg_logo.jpg";
 
-const FooterLinks = {
-  Services: {
-    Civil: [
-      "Structural Excellence",
-      "Foundation to Finish",
-      "Engineered with Precision",
-      "Turnkey Construction",
-    ],
-    Interior: [
-      "Bespoke Interiors",
-      "Functional Elegance",
-      "3D Visualized Design",
-      "Crafted With Detail",
-    ],
-  },
-  Portfolio: ["Residential", "Commercial", "Hospitality", "Office Spaces"],
-  Company: ["About Us", "Our Process", "Meet The Team", "Careers", "Press & Media", "Contact Us"],
-};
+const CompanyLinks = [
+  { label: "About Us", path: "/about" },
+  { label: "Contact Us", path: "/contact" },
+];
 
 const SocialLinks = [
   {
@@ -72,6 +59,8 @@ const contactItems = [
 const legalLinks = ["Privacy Policy", "Terms of Service", "Cookie Policy", "Sitemap"];
 
 export default function SamarpanFooter() {
+  const navigate = useNavigate();
+
   return (
     <>
       <style>{`
@@ -83,73 +72,28 @@ export default function SamarpanFooter() {
           color: #c8d898;
         }
 
-        /* ── TOP BANNER ── */
-        .sg-banner {
-          background: linear-gradient(135deg, #46582a 0%, #3a4a20 50%, #46582a 100%);
-          border-bottom: 1px solid rgba(184,204,106,0.2);
-          padding: 48px 60px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 32px;
-          flex-wrap: wrap;
-        }
-        .sg-banner-text h2 {
-          font-family: var(--font-sans);
-          font-size: clamp(26px, 3.5vw, 38px);
-          font-weight: 400;
-          color: #eef2e0;
-          letter-spacing: -0.5px;
-          margin-bottom: 8px;
-        }
-        .sg-banner-text h2 em { font-style: normal; font-weight: 600; color: #c8dc80; }
-        .sg-banner-text p { font-size: 13px; font-weight: 300; color: #a8bc78; letter-spacing: 0.3px; }
-        .sg-banner-btn {
-          padding: 14px 32px;
-          background: linear-gradient(135deg, #7a9a3a, #92b048);
-          color: #f0ede0;
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 2px;
-          text-transform: uppercase;
-          border: none;
-          border-radius: 10px;
-          cursor: pointer;
-          white-space: nowrap;
-          box-shadow: 0 8px 24px rgba(122,154,58,0.35);
-          transition: all 0.3s ease;
-          flex-shrink: 0;
-        }
-        .sg-banner-btn:hover {
-          background: linear-gradient(135deg, #c9a84c, #e8c97a);
-          color: #2a2a1a;
-          transform: translateY(-2px);
-          box-shadow: 0 12px 32px rgba(201,168,76,0.3);
-        }
-
         /* ── MAIN GRID ── */
-        .sg-main { max-width: 1320px; margin: 0 auto; padding: 64px 60px 0; }
+        .sg-main { max-width: 1320px; margin: 0 auto; padding: 56px 60px 0; }
 
         .sg-grid {
           display: grid;
-          grid-template-columns: minmax(380px, 2.4fr) 1fr 1fr 1fr 1.3fr;
-          gap: 48px;
-          padding-bottom: 56px;
+          grid-template-columns: minmax(320px, 1.8fr) 1fr 1.4fr;
+          gap: 56px;
+          padding-bottom: 48px;
           border-bottom: 1px solid rgba(184,204,106,0.15);
         }
 
         /* ── BRAND COL ── */
-        .sg-logo { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+        .sg-logo { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
         .sg-logo-icon {
-          width: 56px; height: 56px;
+          width: 54px; height: 54px;
           background: #ffffff;
-          border-radius: 14px;
+          border-radius: 12px;
           display: flex; align-items: center; justify-content: center;
           flex-shrink: 0;
           box-shadow:
             0 0 0 1px rgba(184,204,106,0.3),
-            0 4px 16px rgba(0,0,0,0.3),
-            0 0 24px rgba(184,204,106,0.15);
+            0 4px 16px rgba(0,0,0,0.3);
           overflow: hidden;
         }
         .sg-logo-name {
@@ -169,32 +113,12 @@ export default function SamarpanFooter() {
           margin-top: 3px;
         }
         .sg-desc {
-          font-size: 12.5px;
-          line-height: 1.9;
+          font-size: 13px;
+          line-height: 1.85;
           color: #b0c488;
           font-weight: 300;
           margin-bottom: 24px;
-          max-width: 420px;
-        }
-        .sg-badges {
-          display: grid;
-          grid-template-columns: max-content max-content;
-          justify-content: start;
-          gap: 8px 10px;
-          margin-bottom: 28px;
-        }
-        .sg-badge {
-          padding: 5px 12px;
-          background: rgba(184,204,106,0.12);
-          border: 1px solid rgba(184,204,106,0.28);
-          border-radius: 20px;
-          font-size: 9px;
-          font-weight: 600;
-          letter-spacing: 1.2px;
-          text-transform: uppercase;
-          color: #b8cc6a;
-          white-space: nowrap;
-          width: fit-content;
+          max-width: 440px;
         }
         .sg-socials { display: flex; gap: 10px; }
         .sg-social {
@@ -217,9 +141,9 @@ export default function SamarpanFooter() {
 
         /* ── LINK COLS ── */
         .sg-col-title {
-          font-size: 10px;
+          font-size: 11px;
           font-weight: 600;
-          letter-spacing: 2.5px;
+          letter-spacing: 2.2px;
           text-transform: uppercase;
           color: #b8cc6a;
           margin-bottom: 20px;
@@ -233,9 +157,9 @@ export default function SamarpanFooter() {
           height: 1px;
           background: rgba(184,204,106,0.25);
         }
-        .sg-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+        .sg-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
         .sg-link {
-          font-size: 12.5px;
+          font-size: 13.5px;
           font-weight: 300;
           color: #b8c890;
           text-decoration: none;
@@ -243,6 +167,11 @@ export default function SamarpanFooter() {
           display: inline-block;
           position: relative;
           padding-left: 0;
+          cursor: pointer;
+          background: none;
+          border: none;
+          text-align: left;
+          font-family: var(--font-sans);
         }
         .sg-link:hover { color: #ddf0a0; padding-left: 10px; }
         .sg-link::before {
@@ -250,20 +179,11 @@ export default function SamarpanFooter() {
           position: absolute;
           left: -2px;
           opacity: 0;
-          font-size: 10px;
+          font-size: 11px;
           transition: all 0.2s ease;
           color: #b8cc6a;
         }
         .sg-link:hover::before { opacity: 1; }
-        .sg-service-group {
-          font-size: 10px;
-          font-weight: 700;
-          letter-spacing: 1.6px;
-          text-transform: uppercase;
-          color: #b8cc6a;
-          margin: 4px 0 10px;
-        }
-        .sg-service-group:not(:first-child) { margin-top: 18px; }
 
         /* ── CONTACT COL ── */
         .sg-contacts { display: flex; flex-direction: column; gap: 16px; }
@@ -295,64 +215,6 @@ export default function SamarpanFooter() {
         }
         a.sg-contact-value:hover { color: #ddf0a0; }
 
-        /* ── NEWSLETTER ── */
-        .sg-newsletter {
-          max-width: 1320px;
-          margin: 0 auto;
-          padding: 36px 60px;
-          border-bottom: 1px solid rgba(184,204,106,0.12);
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 32px;
-          flex-wrap: wrap;
-        }
-        .sg-nl-label {
-          font-size: 10px;
-          font-weight: 600;
-          letter-spacing: 2px;
-          text-transform: uppercase;
-          color: #b8cc6a;
-          margin-bottom: 5px;
-        }
-        .sg-nl-desc { font-size: 12.5px; font-weight: 300; color: #a8bc78; }
-        .sg-nl-form {
-          display: flex;
-          border-radius: 12px;
-          overflow: hidden;
-          border: 1px solid rgba(184,204,106,0.3);
-          background: rgba(70,88,42,0.6);
-          min-width: 0;
-          width: 100%;
-        }
-        .sg-nl-input {
-          flex: 1;
-          padding: 13px 18px;
-          font-size: 12.5px;
-          font-weight: 300;
-          background: transparent;
-          border: none;
-          outline: none;
-          color: #ddf0a0;
-          font-family: var(--font-sans);
-        }
-        .sg-nl-input::placeholder { color: #7a9060; }
-        .sg-nl-btn {
-          padding: 13px 22px;
-          background: linear-gradient(135deg, #7a9a3a, #92b048);
-          color: #f0ede0;
-          font-size: 10.5px;
-          font-weight: 600;
-          letter-spacing: 1.5px;
-          text-transform: uppercase;
-          border: none;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          font-family: var(--font-sans);
-          white-space: nowrap;
-        }
-        .sg-nl-btn:hover { background: linear-gradient(135deg, #c9a84c, #e8c97a); color: #2a2a1a; }
-
         /* ── BOTTOM BAR ── */
         .sg-bottom {
           max-width: 1320px;
@@ -379,26 +241,17 @@ export default function SamarpanFooter() {
         .sg-legal-sep { width: 1px; height: 12px; background: rgba(184,204,106,0.2); }
 
         /* RESPONSIVE */
-        @media (max-width: 1100px) {
-          .sg-grid { grid-template-columns: 1fr 1fr 1fr; gap: 36px; }
+        @media (max-width: 900px) {
+          .sg-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
           .sg-brand { grid-column: 1 / -1; }
-          .sg-banner { padding: 40px 32px; }
           .sg-main { padding: 48px 32px 0; }
-          .sg-newsletter { padding: 32px; }
           .sg-bottom { padding: 20px 32px 28px; }
         }
-        @media (max-width: 700px) {
-          .sg-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
-          .sg-brand { grid-column: 1 / -1; }
-          .sg-banner { padding: 32px 20px; }
+        @media (max-width: 600px) {
+          .sg-grid { grid-template-columns: 1fr; gap: 32px; }
           .sg-main { padding: 40px 20px 0; }
-          .sg-newsletter { padding: 28px 20px; flex-direction: column; }
-          .sg-nl-form { min-width: unset; width: 100%; }
           .sg-bottom { padding: 20px 20px 28px; flex-direction: column; text-align: center; }
           .sg-legal { justify-content: center; }
-        }
-        @media (max-width: 420px) {
-          .sg-grid { grid-template-columns: 1fr; }
         }
       `}</style>
 
@@ -415,7 +268,7 @@ export default function SamarpanFooter() {
                   <img
                     src={logo}
                     alt="Samarpan Group Logo"
-                    style={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: "12px" }}
+                    style={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: "10px" }}
                   />
                 </div>
                 <div>
@@ -429,12 +282,6 @@ export default function SamarpanFooter() {
                 transforming every corner through thoughtful engineering and elegant interior design.
               </p>
 
-              <div className="sg-badges">
-                {["Trusted Since 2016", "End to End Solutions", "Civil & Interior Experts", "Samarpan Assured Quality", "Nashik's Finest"].map((b) => (
-                  <span key={b} className="sg-badge">✦ {b}</span>
-                ))}
-              </div>
-
               <div className="sg-socials">
                 {SocialLinks.map((s) => (
                   <a key={s.name} href={s.href} className="sg-social" aria-label={s.name} target="_blank" rel="noopener noreferrer">{s.icon}</a>
@@ -442,34 +289,26 @@ export default function SamarpanFooter() {
               </div>
             </div>
 
-            {/* LINK COLUMNS */}
-            {Object.entries(FooterLinks).map(([title, links]) => (
-              <div key={title}>
-                <div className="sg-col-title">{title}</div>
-                {Array.isArray(links) ? (
-                  <ul className="sg-links">
-                    {links.map((link) => (
-                      <li key={link}>
-                        <a href="#" className="sg-link">{link}</a>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  Object.entries(links).map(([group, items]) => (
-                    <div key={group}>
-                      <p className="sg-service-group">{group}</p>
-                      <ul className="sg-links">
-                        {items.map((link) => (
-                          <li key={link}>
-                            <a href="#" className="sg-link">{link}</a>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))
-                )}
-              </div>
-            ))}
+            {/* COMPANY */}
+            <div className="sg-company-col">
+              <div className="sg-col-title">Company</div>
+              <ul className="sg-links">
+                {CompanyLinks.map((item) => (
+                  <li key={item.label}>
+                    <button
+                      type="button"
+                      className="sg-link"
+                      onClick={() => {
+                        navigate(item.path);
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                    >
+                      {item.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
             {/* CONTACT */}
             <div className="sg-contact-col">
@@ -491,18 +330,6 @@ export default function SamarpanFooter() {
               </div>
             </div>
 
-          </div>
-        </div>
-
-        {/* ── NEWSLETTER ── */}
-        <div className="sg-newsletter">
-          <div>
-            <p className="sg-nl-label">✦ Newsletter</p>
-            <p className="sg-nl-desc">Design tips, trends & project reveals — straight to your inbox.</p>
-          </div>
-          <div className="sg-nl-form">
-            <input className="sg-nl-input" type="email" placeholder="your@email.com" />
-            <button className="sg-nl-btn">Subscribe →</button>
           </div>
         </div>
 
