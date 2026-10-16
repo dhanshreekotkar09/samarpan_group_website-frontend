@@ -112,15 +112,7 @@ export default function SamarpanFooter() {
           display: block;
           margin-top: 3px;
         }
-        .sg-desc {
-          font-size: 13px;
-          line-height: 1.85;
-          color: #b0c488;
-          font-weight: 300;
-          margin-bottom: 24px;
-          max-width: 440px;
-        }
-        .sg-socials { display: flex; gap: 10px; }
+        .sg-socials { display: flex; gap: 10px; margin-top: 20px; }
         .sg-social {
           width: 38px; height: 38px;
           border-radius: 10px;
@@ -276,11 +268,6 @@ export default function SamarpanFooter() {
                   <span className="sg-logo-tagline">Swapnatil Gharasathi Ek Samarpan</span>
                 </div>
               </div>
-
-              <p className="sg-desc">
-                True to our name, Samarpan is our commitment to your dream space —
-                transforming every corner through thoughtful engineering and elegant interior design.
-              </p>
 
               <div className="sg-socials">
                 {SocialLinks.map((s) => (
