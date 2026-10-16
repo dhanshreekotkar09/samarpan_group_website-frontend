@@ -38,47 +38,6 @@ const SocialLinks = [
   },
 ];
 
-const contactItems = [
-  {
-    icon: "📍",
-    label: "Office",
-    value: "Office No. 1, Deepjyot Apartment, Hanumanwadi, Makhmalabad Road, Panchavati, Nashik – 422003",
-  },
-  {
-    icon: "📞",
-    label: "Phone",
-    value: "+91 80555 87237",
-    href: "tel:+918055587237",
-  },
-  {
-    icon: "✉️",
-    label: "Email",
-    value: "thesamarpaninteriors@gmail.com",
-    href: "https://mail.google.com/mail/?view=cm&to=thesamarpaninteriors@gmail.com",
-  },
-  {
-    icon: "📸",
-    label: "Instagram",
-    value: "@Samarpan_Group_Interiors",
-    href: "https://www.instagram.com/samarpan_group_interiors?igsh=dmlvb2R5YzRiNmhw",
-  },
-  {
-    icon: (
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="#b8cc6a">
-        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-      </svg>
-    ),
-    label: "Facebook",
-    value: "Samarpan Group Interiors",
-    href: "https://www.facebook.com/share/1B978MBdLy/",
-  },
-  {
-    icon: "🕐",
-    label: "Hours",
-    value: "Mon–Fri: 9am – 5pm | Sat: 9am – 3pm",
-  },
-];
-
 const legalLinks = ["Privacy Policy", "Terms of Service", "Cookie Policy", "Sitemap"];
 
 export default function SamarpanFooter() {
@@ -106,15 +65,15 @@ export default function SamarpanFooter() {
 
         /* ── MAIN CONTENT ── */
         .sg-main {
-          max-width: 1200px;
+          max-width: 1240px;
           margin: 0 auto;
-          padding: 60px 40px 48px;
+          padding: 56px 40px 44px;
         }
 
         .sg-grid {
           display: grid;
-          grid-template-columns: 1.4fr 0.9fr 1.6fr;
-          gap: 60px;
+          grid-template-columns: 1.1fr 0.65fr 2fr;
+          gap: 52px;
           align-items: start;
         }
 
@@ -202,7 +161,7 @@ export default function SamarpanFooter() {
           letter-spacing: 2px;
           text-transform: uppercase;
           color: #c8dc80;
-          margin-bottom: 22px;
+          margin-bottom: 20px;
           display: flex;
           align-items: center;
           gap: 10px;
@@ -257,17 +216,24 @@ export default function SamarpanFooter() {
           transform: translateX(4px);
         }
 
-        /* ── CONTACT ITEMS ── */
-        .sg-contacts {
+        /* ── GET IN TOUCH (2 Sub-Columns) ── */
+        .sg-contacts-grid {
+          display: grid;
+          grid-template-columns: 1.15fr 1fr;
+          gap: 20px 28px;
+          align-items: start;
+        }
+
+        .sg-contact-subcol {
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 15px;
         }
 
         .sg-contact-item {
           display: flex;
           align-items: flex-start;
-          gap: 12px;
+          gap: 11px;
         }
 
         .sg-contact-icon {
@@ -292,17 +258,17 @@ export default function SamarpanFooter() {
         .sg-contact-label {
           font-size: 9px;
           font-weight: 600;
-          letter-spacing: 1.6px;
+          letter-spacing: 1.5px;
           text-transform: uppercase;
           color: #c8dc80;
-          margin-bottom: 3px;
+          margin-bottom: 2px;
         }
 
         .sg-contact-value {
           font-size: 12.5px;
           font-weight: 300;
           color: #d0deaa;
-          line-height: 1.6;
+          line-height: 1.55;
           text-decoration: none;
           transition: color 0.2s ease;
         }
@@ -315,9 +281,9 @@ export default function SamarpanFooter() {
         /* ── BOTTOM BAR ── */
         .sg-bottom {
           border-top: 1px solid rgba(184,204,106,0.14);
-          max-width: 1200px;
+          max-width: 1240px;
           margin: 0 auto;
-          padding: 24px 40px 32px;
+          padding: 22px 40px 28px;
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -362,32 +328,36 @@ export default function SamarpanFooter() {
         }
 
         /* ── RESPONSIVE ── */
-        @media (max-width: 960px) {
+        @media (max-width: 990px) {
           .sg-grid {
             grid-template-columns: 1fr 1fr;
-            gap: 40px;
+            gap: 36px;
           }
-          .sg-brand {
+          .sg-contact {
             grid-column: 1 / -1;
           }
           .sg-main {
-            padding: 48px 28px 36px;
+            padding: 44px 28px 32px;
           }
           .sg-bottom {
-            padding: 20px 28px 28px;
+            padding: 20px 28px 24px;
           }
         }
 
         @media (max-width: 640px) {
           .sg-grid {
             grid-template-columns: 1fr;
-            gap: 36px;
+            gap: 32px;
+          }
+          .sg-contacts-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
           }
           .sg-main {
-            padding: 40px 20px 32px;
+            padding: 36px 20px 28px;
           }
           .sg-bottom {
-            padding: 20px 20px 28px;
+            padding: 18px 20px 24px;
             flex-direction: column;
             text-align: center;
           }
@@ -401,7 +371,7 @@ export default function SamarpanFooter() {
         <div className="sg-main">
           <div className="sg-grid">
 
-            {/* BRAND COL (Same Logo as Header) */}
+            {/* BRAND COL (Header Logo) */}
             <div className="sg-brand">
               <div
                 className="sg-logo-wrap"
@@ -460,30 +430,96 @@ export default function SamarpanFooter() {
               </ul>
             </div>
 
-            {/* GET IN TOUCH COL */}
+            {/* GET IN TOUCH COL (2 Sub-Columns: Office/Hours & Direct Contact) */}
             <div className="sg-contact">
               <div className="sg-col-title">Get In Touch</div>
-              <div className="sg-contacts">
-                {contactItems.map((item) => (
-                  <div key={item.label} className="sg-contact-item">
-                    <div className="sg-contact-icon">{item.icon}</div>
+              <div className="sg-contacts-grid">
+
+                {/* Sub-Column 1: Office & Working Hours */}
+                <div className="sg-contact-subcol">
+                  <div className="sg-contact-item">
+                    <div className="sg-contact-icon">📍</div>
                     <div className="sg-contact-body">
-                      <span className="sg-contact-label">{item.label}</span>
-                      {item.href ? (
-                        <a
-                          href={item.href}
-                          className="sg-contact-value"
-                          target={item.href.startsWith("http") ? "_blank" : undefined}
-                          rel="noopener noreferrer"
-                        >
-                          {item.value}
-                        </a>
-                      ) : (
-                        <span className="sg-contact-value">{item.value}</span>
-                      )}
+                      <span className="sg-contact-label">Office</span>
+                      <span className="sg-contact-value">
+                        Office No. 1, Deepjyot Apartment, Hanumanwadi, Makhmalabad Road, Panchavati, Nashik – 422003
+                      </span>
                     </div>
                   </div>
-                ))}
+
+                  <div className="sg-contact-item">
+                    <div className="sg-contact-icon">🕐</div>
+                    <div className="sg-contact-body">
+                      <span className="sg-contact-label">Hours</span>
+                      <span className="sg-contact-value">
+                        Mon–Fri: 9am – 5pm<br />Saturday: 9am – 3pm
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Sub-Column 2: Direct Contact & Socials */}
+                <div className="sg-contact-subcol">
+                  <div className="sg-contact-item">
+                    <div className="sg-contact-icon">📞</div>
+                    <div className="sg-contact-body">
+                      <span className="sg-contact-label">Phone</span>
+                      <a href="tel:+918055587237" className="sg-contact-value">
+                        +91 80555 87237
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="sg-contact-item">
+                    <div className="sg-contact-icon">✉️</div>
+                    <div className="sg-contact-body">
+                      <span className="sg-contact-label">Email</span>
+                      <a
+                        href="https://mail.google.com/mail/?view=cm&to=thesamarpaninteriors@gmail.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="sg-contact-value"
+                      >
+                        thesamarpaninteriors@gmail.com
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="sg-contact-item">
+                    <div className="sg-contact-icon">📸</div>
+                    <div className="sg-contact-body">
+                      <span className="sg-contact-label">Instagram</span>
+                      <a
+                        href="https://www.instagram.com/samarpan_group_interiors?igsh=dmlvb2R5YzRiNmhw"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="sg-contact-value"
+                      >
+                        @Samarpan_Group_Interiors
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="sg-contact-item">
+                    <div className="sg-contact-icon">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="#b8cc6a">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                      </svg>
+                    </div>
+                    <div className="sg-contact-body">
+                      <span className="sg-contact-label">Facebook</span>
+                      <a
+                        href="https://www.facebook.com/share/1B978MBdLy/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="sg-contact-value"
+                      >
+                        Samarpan Group Interiors
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
 
