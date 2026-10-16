@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import footerLogo from "../assets/footer_logo.jpg";
+import footerLogo from "../assets/footer_logo.png";
 
 const CompanyLinks = [
   { label: "About Us", path: "/about" },
@@ -255,18 +255,12 @@ export default function SamarpanFooter() {
 
             {/* BRAND */}
             <div className="sg-brand">
-              <div className="sg-logo">
-                <div className="sg-logo-icon" style={{ width: "64px", height: "64px", background: "#0a0a08", borderRadius: "12px", border: "1px solid rgba(184,204,106,0.3)" }}>
-                  <img
-                    src={footerLogo}
-                    alt="Samarpan Group Logo"
-                    style={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: "10px" }}
-                  />
-                </div>
-                <div>
-                  <span className="sg-logo-name">Samarpan Group</span>
-                  <span className="sg-logo-tagline">Swapnatil Gharasathi Ek Samarpan</span>
-                </div>
+              <div style={{ marginBottom: "16px" }}>
+                <img
+                  src={footerLogo}
+                  alt="Samarpan Group Logo"
+                  style={{ height: "70px", maxWidth: "230px", objectFit: "contain", display: "block" }}
+                />
               </div>
 
               <div className="sg-socials">
