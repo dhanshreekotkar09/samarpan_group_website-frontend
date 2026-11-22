@@ -225,7 +225,15 @@ export default function SamarpanNavbar() {
     },
     logoSub: { fontSize: "9px", letterSpacing: "2px", color: "#8a9a4a", textTransform: "uppercase", marginTop: "2px" },
 
-    desktopLinks: { display: "flex", alignItems: "center", gap: "4px", listStyle: "none", margin: 0, padding: 0 },
+    desktopLinks: {
+      display: "flex",
+      alignItems: "center",
+      gap: "6px",
+      listStyle: "none",
+      margin: 0,
+      padding: 0,
+      marginRight: "28px",
+    },
     navLinkWrap: { position: "relative" },
     navLink: {
       display: "flex", alignItems: "center", gap: "4px",
@@ -254,7 +262,7 @@ export default function SamarpanNavbar() {
       letterSpacing: "0.4px", color: "#3d3d30", borderRadius: "8px",
       cursor: "pointer", textDecoration: "none", transition: "all 0.15s ease",
     },
-    navRight: { display: "flex", alignItems: "center", gap: "12px" },
+    navRight: { display: "flex", alignItems: "center", gap: "12px", flexShrink: 0 },
     phonePill: {
       display: "flex", alignItems: "center", gap: "6px",
       padding: "6px 14px",
@@ -389,6 +397,10 @@ export default function SamarpanNavbar() {
         }
         @media (min-width: 1025px) {
           .hamburger-btn    { display: none !important; }
+        }
+        @media (min-width: 1025px) and (max-width: 1200px) {
+          .desktop-links    { margin-right: 16px !important; gap: 2px !important; }
+          .nav-link-item    { padding: 6px 10px !important; font-size: 11px !important; }
         }
         @media (max-width: 640px) {
           .top-bar          { display: none !important; }

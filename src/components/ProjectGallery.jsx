@@ -227,8 +227,8 @@ export default function ProjectGallery({ media = [], gallery, accentColor = "#8a
               </span>
               <span className="pg-stage-hint">
                 {isCurrentVideo
-                  ? "▶ प्ले बटणावर क्लिक करून व्हिडिओ सुरू करा"
-                  : "💡 बाण (‹ / ›) किंवा कीबोर्ड वापरून पुढील फोटो पहा"}
+                  ? "▶ Click play button to start video"
+                  : "💡 Use arrows (‹ / ›) or keyboard arrow keys to view more photos"}
               </span>
             </div>
           </div>

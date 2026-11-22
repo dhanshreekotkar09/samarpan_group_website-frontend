@@ -1533,7 +1533,7 @@ export default function ProjectDetail() {
                   letterSpacing: 0.5,
                 }}
               >
-                💡 फोटोवर क्लिक करून तुम्ही संपूर्ण हाय-रिझोल्यूशन इमेज झूम करू शकता.
+                💡 Click on any photo to view and zoom the full high-resolution image.
               </p>
             </div>
           </div>
