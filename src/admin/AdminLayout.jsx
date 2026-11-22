@@ -1,15 +1,27 @@
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate, Link } from "react-router-dom";
-import { verifyToken } from "../api/client";
+import { Outlet, useNavigate, Link, useLocation } from "react-router-dom";
+import { verifyToken, getEnquiries } from "../api/client";
 
 export default function AdminLayout() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [checking, setChecking] = useState(true);
+  const [newCount, setNewCount] = useState(0);
   const username = localStorage.getItem("adminUser") || "Admin";
 
   useEffect(() => {
     verifyToken()
-      .then(() => setChecking(false))
+      .then(() => {
+        setChecking(false);
+        // Fetch new enquiry count for badge
+        getEnquiries({ status: "new" })
+          .then((res) => {
+            if (res.data?.stats?.new !== undefined) {
+              setNewCount(res.data.stats.new);
+            }
+          })
+          .catch(() => {});
+      })
       .catch(() => navigate("/admin/login"));
   }, [navigate]);
 
@@ -23,16 +35,65 @@ export default function AdminLayout() {
     return <div style={{ padding: 48, textAlign: "center", fontFamily: "var(--font-sans)" }}>Loading...</div>;
   }
 
+  const navItems = [
+    { label: "📁 Projects", path: "/admin/projects" },
+    {
+      label: "📩 Enquiries & Leads",
+      path: "/admin/enquiries",
+      badge: newCount > 0 ? newCount : null,
+    },
+    { label: "⭐ Testimonials", path: "/admin/testimonials" },
+    { label: "⚙️ Website Settings", path: "/admin/settings" },
+  ];
+
   return (
     <div className="admin-layout">
       <aside className="admin-sidebar">
-        <div className="admin-brand">Samarpan Admin</div>
+        <div className="admin-brand">
+          <span style={{ fontSize: 13, textTransform: "uppercase", letterSpacing: 1.5, opacity: 0.7, display: "block" }}>
+            Control Center
+          </span>
+          <span style={{ fontWeight: 600 }}>Samarpan Group</span>
+        </div>
         <nav>
-          <Link to="/admin/projects">Projects</Link>
-          <Link to="/" target="_blank">View Website ↗</Link>
+          {navItems.map((item) => {
+            const isActive = location.pathname.startsWith(item.path);
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={isActive ? "active-link" : ""}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <span>{item.label}</span>
+                {item.badge && (
+                  <span
+                    style={{
+                      background: "#eab308",
+                      color: "#1a1a10",
+                      fontSize: 10,
+                      fontWeight: 700,
+                      padding: "2px 7px",
+                      borderRadius: 10,
+                    }}
+                  >
+                    {item.badge}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
+          <div style={{ margin: "16px 24px", height: "1px", background: "rgba(255,255,255,0.1)" }} />
+          <Link to="/" target="_blank" rel="noopener noreferrer">
+            🌐 View Website ↗
+          </Link>
         </nav>
         <div className="admin-sidebar-footer">
-          <span>{username}</span>
+          <span>👤 {username}</span>
           <button type="button" onClick={logout}>Logout</button>
         </div>
       </aside>
@@ -79,6 +140,12 @@ export default function AdminLayout() {
         .admin-sidebar nav a:hover {
           background: rgba(255,255,255,0.08);
           color: #fff;
+        }
+        .admin-sidebar nav a.active-link {
+          background: rgba(255,255,255,0.15);
+          color: #ffffff;
+          font-weight: 600;
+          border-left: 3px solid #eab308;
         }
         .admin-sidebar-footer {
           padding: 16px 24px;

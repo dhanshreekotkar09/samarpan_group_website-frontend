@@ -1,69 +1,19 @@
-import { useState } from "react";
-
-const VALUES = [
-  {
-    icon: "✦",
-    title: "Craftsmanship",
-    desc: "Every detail is deliberately chosen — from the curve of a cornice to the grain of a wood finish. We believe beauty lives in precision.",
-  },
-  {
-    icon: "◈",
-    title: "Collaboration",
-    desc: "Your home should tell your story. We listen deeply before we design, ensuring every space is a genuine reflection of who you are.",
-  },
-  {
-    icon: "◉",
-    title: "Timelessness",
-    desc: "We design spaces that outlast trends — rooted in classical proportion but alive with contemporary sensibility.",
-  },
-  {
-    icon: "◇",
-    title: "Integrity",
-    desc: "Transparent pricing, honest timelines, and a commitment to delivering exactly what we promise — every single time.",
-  },
-];
-
-const STATS = [
-  { number: "120+", label: "Projects Completed" },
-  { number: "8+", label: "Years of Excellence" },
-  { number: "98%", label: "Client Satisfaction" },
-  { number: "3", label: "States Served" },
-];
-
-const TEAM = [
-  {
-    name: "Ar. Priya Samarpan",
-    role: "Founder & Principal Designer",
-    bio: "With a degree from Sir J.J. College of Architecture and over a decade of practice, Priya brings a rare blend of classical training and contemporary vision.",
-    initials: "PS",
-    accent: "#8a9a4a",
-  },
-  {
-    name: "Rohan Kulkarni",
-    role: "Senior Interior Architect",
-    bio: "Rohan's spatial intelligence and love for material honesty have shaped some of our most celebrated residential projects across Maharashtra.",
-    initials: "RK",
-    accent: "#c8b89a",
-  },
-  {
-    name: "Sneha Deshpande",
-    role: "3D Visualization & Styling Lead",
-    bio: "Sneha translates concepts into photorealistic renders that help clients fall in love with their future homes before a single nail is driven.",
-    initials: "SD",
-    accent: "#6a7a8a",
-  },
-];
-
-const MILESTONES = [
-  { year: "2016", event: "Founded in Nashik with a single residential project" },
-  { year: "2018", event: "Expanded to commercial interiors; first hospitality project" },
-  { year: "2020", event: "Launched 3D visualization studio; went fully digital" },
-  { year: "2022", event: "Completed 75th project; opened Panchavati design studio" },
-  { year: "2024", event: "Crossed 120 projects across Maharashtra" },
-];
+import { useNavigate } from "react-router-dom";
+import Int1 from "../assets/Int-1.jpg.jpeg";
+import TestimonialsSection from "./TestimonialsSection";
 
 export default function AboutUs() {
-  const [activeTeam, setActiveTeam] = useState(null);
+  const navigate = useNavigate();
+
+  const handleConsultation = () => {
+    navigate("/contact");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleExploreProjects = () => {
+    navigate("/projects");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <>
@@ -75,555 +25,802 @@ export default function AboutUs() {
           background: linear-gradient(160deg, #f5f0e8 0%, #ede8d8 40%, #e8e0cc 100%);
           color: #3d3d30;
           min-height: 100vh;
+          overflow-x: hidden;
         }
 
-        /* ── HERO ── */
+        /* ── HERO SECTION ── */
         .ab-hero {
           position: relative;
-          padding: 100px 60px 80px;
+          padding: 84px 32px 64px;
           overflow: hidden;
-          border-bottom: 1px solid rgba(138,154,74,0.2);
         }
+
         .ab-hero-bg {
-          position: absolute; inset: 0; pointer-events: none;
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
           background:
-            radial-gradient(ellipse 55% 65% at 100% 0%, rgba(138,154,74,0.1) 0%, transparent 65%),
-            radial-gradient(ellipse 45% 55% at 0% 100%, rgba(200,184,154,0.18) 0%, transparent 65%);
+            radial-gradient(ellipse 55% 65% at 90% 10%, rgba(138,154,74,0.12) 0%, transparent 65%),
+            radial-gradient(ellipse 45% 55% at 10% 90%, rgba(200,184,154,0.2) 0%, transparent 65%);
         }
+
         .ab-hero-inner {
-          max-width: 1300px; margin: 0 auto;
-          display: grid; grid-template-columns: 1fr 1fr;
-          gap: 80px; align-items: center;
-          position: relative; z-index: 1;
+          max-width: 1200px;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: 1.15fr 0.85fr;
+          gap: 56px;
+          align-items: center;
+          position: relative;
+          z-index: 1;
         }
+
         .ab-eyebrow {
-          display: inline-flex; align-items: center; gap: 8px;
-          padding: 6px 20px;
-          background: rgba(138,154,74,0.1);
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 6px 18px;
+          background: rgba(138,154,74,0.12);
           border: 1px solid rgba(138,154,74,0.3);
           border-radius: 20px;
-          font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase;
-          color: #4a5a1f; margin-bottom: 28px;
+          font-size: 11px;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: #4a5a1f;
+          font-weight: 600;
+          margin-bottom: 20px;
         }
+
         .ab-hero h1 {
-          font-family: var(--font-sans);
-          font-size: clamp(44px, 5.5vw, 72px);
-          font-weight: 300; line-height: 1.08;
-          color: #2a2a24; letter-spacing: -1.5px;
-          margin-bottom: 24px;
+          font-size: clamp(34px, 4.4vw, 56px);
+          font-weight: 600;
+          line-height: 1.15;
+          color: #2a2a24;
+          letter-spacing: -0.8px;
+          margin-bottom: 12px;
         }
-        .ab-hero h1 em { font-style: normal; font-weight: 600; color: #8a9a4a; }
+
+        .ab-hero h1 em {
+          font-style: normal;
+          color: #6b7c32;
+        }
+
+        .ab-hero-tagline {
+          font-size: 16px;
+          font-weight: 500;
+          color: #6a6a52;
+          margin-bottom: 20px;
+          display: block;
+        }
+
         .ab-hero-desc {
-          font-size: 14px; font-weight: 300; line-height: 1.9;
-          color: #5a5a4a; max-width: 420px; margin-bottom: 40px;
+          font-size: 15px;
+          font-weight: 400;
+          line-height: 1.8;
+          color: #555545;
+          max-width: 580px;
+          margin-bottom: 32px;
         }
-        .ab-hero-cta {
-          display: inline-flex; align-items: center; gap: 10px;
+
+        .ab-hero-actions {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          flex-wrap: wrap;
+        }
+
+        .ab-btn-primary {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
           padding: 13px 28px;
           background: linear-gradient(135deg, #2a2a24 0%, #3d4a1f 100%);
-          color: #e8d9b5; font-size: 11px; font-weight: 600;
-          letter-spacing: 2px; text-transform: uppercase;
-          border-radius: 10px; border: none; cursor: pointer;
+          color: #e8d9b5;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 1.8px;
+          text-transform: uppercase;
+          border-radius: 10px;
+          border: none;
+          cursor: pointer;
           box-shadow: 0 6px 20px rgba(42,42,36,0.2);
-          transition: all 0.3s ease; font-family: var(--font-sans);
-        }
-        .ab-hero-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(42,42,36,0.3); }
-
-        /* RIGHT SIDE DECORATIVE PANEL */
-        .ab-hero-panel {
-          position: relative;
-        }
-        .ab-panel-card {
-          background: rgba(255,252,245,0.75);
-          border: 1px solid rgba(138,154,74,0.2);
-          border-radius: 28px;
-          padding: 48px 40px;
-          box-shadow: 0 20px 60px rgba(42,42,36,0.1);
-          position: relative; overflow: hidden;
-        }
-        .ab-panel-card::before {
-          content: '';
-          position: absolute; top: 0; right: 0;
-          width: 180px; height: 180px;
-          background: radial-gradient(circle, rgba(138,154,74,0.12) 0%, transparent 70%);
-          pointer-events: none;
-        }
-        .ab-panel-quote {
-          font-family: var(--font-sans);
-          font-size: 22px; font-weight: 400;
-          color: #2a2a24; line-height: 1.6;
-          margin-bottom: 24px; position: relative;
-        }
-        .ab-panel-quote::before {
-          content: '"';
-          font-size: 80px; line-height: 0;
-          color: rgba(138,154,74,0.2);
-          position: absolute; top: 20px; left: -10px;
-        }
-        .ab-panel-attr {
-          font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
-          text-transform: uppercase; color: #8a9a4a;
-        }
-        .ab-panel-divider {
-          height: 1px;
-          background: linear-gradient(90deg, rgba(138,154,74,0.3), transparent);
-          margin: 28px 0;
-        }
-        .ab-panel-fact {
-          display: flex; align-items: center; gap: 14px;
-          margin-bottom: 16px;
-        }
-        .ab-panel-fact:last-child { margin-bottom: 0; }
-        .ab-panel-dot {
-          width: 8px; height: 8px; border-radius: 50%;
-          background: #8a9a4a; flex-shrink: 0;
-        }
-        .ab-panel-fact-text {
-          font-size: 13px; font-weight: 300; color: #4a4a38; line-height: 1.5;
-        }
-
-        /* ── STATS ── */
-        .ab-stats {
-          background: linear-gradient(135deg, #2a2a24 0%, #3d4a1f 60%, #2a3214 100%);
-          padding: 56px 60px;
-        }
-        .ab-stats-inner {
-          max-width: 1300px; margin: 0 auto;
-          display: grid; grid-template-columns: repeat(4, 1fr);
-          gap: 0;
-        }
-        .ab-stat {
-          padding: 20px 40px;
-          border-right: 1px solid rgba(200,184,154,0.15);
-          text-align: center;
-        }
-        .ab-stat:last-child { border-right: none; }
-        .ab-stat-num {
-          font-family: var(--font-sans);
-          font-size: 52px; font-weight: 300;
-          color: #e8d9b5; line-height: 1; letter-spacing: -2px;
-          margin-bottom: 8px;
-        }
-        .ab-stat-num span { color: #8a9a4a; }
-        .ab-stat-label {
-          font-size: 10px; font-weight: 600; letter-spacing: 2px;
-          text-transform: uppercase; color: #6a6a58;
-        }
-
-        /* ── STORY ── */
-        .ab-story {
-          max-width: 1300px; margin: 0 auto;
-          padding: 96px 60px;
-          display: grid; grid-template-columns: 1fr 1.4fr;
-          gap: 80px; align-items: start;
-        }
-        .ab-section-label {
-          font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase;
-          color: #8a9a4a; font-weight: 600; margin-bottom: 16px;
-          display: flex; align-items: center; gap: 12px;
-        }
-        .ab-section-label::before {
-          content: ''; width: 32px; height: 1.5px;
-          background: linear-gradient(90deg, #8a9a4a, transparent);
-        }
-        .ab-story-left h2 {
-          font-family: var(--font-sans);
-          font-size: clamp(34px, 3.5vw, 48px);
-          font-weight: 400; color: #2a2a24;
-          line-height: 1.15; letter-spacing: -0.5px;
-          margin-bottom: 8px;
-        }
-        .ab-story-left h2 em { font-style: normal; font-weight: 600; color: #8a9a4a; }
-        .ab-story-left p {
-          font-size: 13px; font-weight: 300;
-          color: #6a6a54; line-height: 1.9; margin-bottom: 20px;
-        }
-
-        /* TIMELINE */
-        .ab-timeline { position: relative; padding-left: 28px; }
-        .ab-timeline::before {
-          content: '';
-          position: absolute; left: 7px; top: 6px; bottom: 6px;
-          width: 1.5px;
-          background: linear-gradient(180deg, #8a9a4a 0%, rgba(138,154,74,0.1) 100%);
-        }
-        .ab-milestone {
-          position: relative; margin-bottom: 32px;
-          padding-bottom: 32px;
-          border-bottom: 1px solid rgba(138,154,74,0.1);
-        }
-        .ab-milestone:last-child { border-bottom: none; margin-bottom: 0; }
-        .ab-milestone::before {
-          content: '';
-          position: absolute; left: -24px; top: 6px;
-          width: 10px; height: 10px; border-radius: 50%;
-          background: #8a9a4a;
-          box-shadow: 0 0 0 3px rgba(138,154,74,0.15);
-        }
-        .ab-milestone-year {
-          font-size: 10px; font-weight: 600; letter-spacing: 2px;
-          text-transform: uppercase; color: #8a9a4a; margin-bottom: 6px;
-        }
-        .ab-milestone-event {
-          font-size: 13.5px; font-weight: 400; color: #2a2a24; line-height: 1.6;
-        }
-
-        /* ── VALUES ── */
-        .ab-values-section {
-          background: rgba(42,42,36,0.04);
-          border-top: 1px solid rgba(138,154,74,0.15);
-          border-bottom: 1px solid rgba(138,154,74,0.15);
-          padding: 88px 60px;
-        }
-        .ab-values-inner { max-width: 1300px; margin: 0 auto; }
-        .ab-values-header {
-          text-align: center; margin-bottom: 60px;
-        }
-        .ab-values-header h2 {
-          font-family: var(--font-sans);
-          font-size: clamp(34px, 4vw, 52px);
-          font-weight: 400; color: #2a2a24;
-          letter-spacing: -0.5px; margin-top: 12px;
-        }
-        .ab-values-header h2 em { font-style: normal; font-weight: 600; color: #8a9a4a; }
-        .ab-values-grid {
-          display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
-        }
-        .ab-value-card {
-          padding: 36px 28px;
-          background: rgba(255,252,245,0.7);
-          border: 1px solid rgba(138,154,74,0.18);
-          border-radius: 20px;
           transition: all 0.3s ease;
-          position: relative; overflow: hidden;
-        }
-        .ab-value-card::after {
-          content: '';
-          position: absolute; bottom: 0; left: 0; right: 0;
-          height: 3px;
-          background: linear-gradient(90deg, #8a9a4a, #c8b89a);
-          transform: scaleX(0); transform-origin: left;
-          transition: transform 0.3s ease;
-        }
-        .ab-value-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(42,42,36,0.1); border-color: rgba(138,154,74,0.35); }
-        .ab-value-card:hover::after { transform: scaleX(1); }
-        .ab-value-icon {
-          font-size: 24px; color: #8a9a4a;
-          margin-bottom: 20px; display: block;
-        }
-        .ab-value-title {
           font-family: var(--font-sans);
-          font-size: 22px; font-weight: 500;
-          color: #2a2a24; margin-bottom: 12px;
-        }
-        .ab-value-desc {
-          font-size: 12.5px; font-weight: 300;
-          color: #5a5a4a; line-height: 1.85;
         }
 
-        /* ── TEAM ── */
-        .ab-team-section {
-          max-width: 1300px; margin: 0 auto;
-          padding: 96px 60px;
+        .ab-btn-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 26px rgba(42,42,36,0.3);
+          color: #ffffff;
         }
-        .ab-team-header { margin-bottom: 56px; }
-        .ab-team-header h2 {
-          font-family: var(--font-sans);
-          font-size: clamp(34px, 4vw, 52px);
-          font-weight: 400; color: #2a2a24;
-          letter-spacing: -0.5px; margin-top: 12px;
-        }
-        .ab-team-header h2 em { font-style: normal; font-weight: 600; color: #8a9a4a; }
-        .ab-team-grid {
-          display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;
-        }
-        .ab-team-card {
-          background: rgba(255,252,245,0.8);
-          border: 1px solid rgba(138,154,74,0.18);
-          border-radius: 24px;
-          padding: 40px 32px;
+
+        .ab-btn-secondary {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 12px 24px;
+          background: rgba(255,255,255,0.6);
+          color: #3d3d30;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 1.8px;
+          text-transform: uppercase;
+          border-radius: 10px;
+          border: 1.5px solid rgba(42,42,36,0.25);
           cursor: pointer;
           transition: all 0.3s ease;
-          position: relative; overflow: hidden;
-        }
-        .ab-team-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 24px 56px rgba(42,42,36,0.12);
-          border-color: rgba(138,154,74,0.4);
-        }
-        .ab-team-avatar {
-          width: 72px; height: 72px; border-radius: 20px;
-          display: flex; align-items: center; justify-content: center;
           font-family: var(--font-sans);
-          font-size: 26px; font-weight: 500; color: #fff;
-          margin-bottom: 24px;
-          box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
-        .ab-team-name {
-          font-family: var(--font-sans);
-          font-size: 22px; font-weight: 500; color: #2a2a24;
-          margin-bottom: 4px;
+
+        .ab-btn-secondary:hover {
+          background: #ffffff;
+          border-color: #3d4a1f;
+          transform: translateY(-2px);
         }
-        .ab-team-role {
-          font-size: 10px; font-weight: 600; letter-spacing: 1.8px;
-          text-transform: uppercase; color: #8a9a4a; margin-bottom: 18px;
+
+        /* ── HERO IMAGE CARD ── */
+        .ab-hero-image-wrap {
+          position: relative;
         }
-        .ab-team-bio {
-          font-size: 12.5px; font-weight: 300;
-          color: #5a5a4a; line-height: 1.85;
+
+        .ab-hero-image-card {
+          position: relative;
+          border-radius: 24px;
+          overflow: hidden;
+          background: #ffffff;
+          box-shadow: 0 18px 45px rgba(42,42,36,0.12);
+          border: 1px solid rgba(138,154,74,0.25);
         }
-        .ab-team-divider {
-          width: 40px; height: 1.5px;
-          background: linear-gradient(90deg, #8a9a4a, transparent);
-          margin-bottom: 18px;
+
+        .ab-hero-image-card img {
+          width: 100%;
+          height: 380px;
+          object-fit: cover;
+          display: block;
+          transition: transform 0.5s ease;
+        }
+
+        .ab-hero-image-card:hover img {
+          transform: scale(1.03);
+        }
+
+        .ab-floating-badge {
+          position: absolute;
+          bottom: 20px;
+          left: 20px;
+          right: 20px;
+          background: rgba(42,42,36,0.85);
+          backdrop-filter: blur(10px);
+          padding: 14px 20px;
+          border-radius: 14px;
+          border: 1px solid rgba(232,217,181,0.25);
+          color: #f5f0e8;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .ab-badge-title {
+          font-size: 13px;
+          font-weight: 600;
+          color: #e8d9b5;
+          letter-spacing: 0.3px;
+        }
+
+        .ab-badge-sub {
+          font-size: 11px;
+          color: #c8b89a;
+          margin-top: 2px;
+        }
+
+        .ab-badge-dot {
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: #8a9a4a;
+          margin-right: 6px;
+        }
+
+        /* ── SECTION HEADER ── */
+        .ab-sec-header {
+          text-align: center;
+          margin-bottom: 40px;
+        }
+
+        .ab-sec-pill {
+          font-size: 10.5px;
+          font-weight: 600;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: #8a9a4a;
+          margin-bottom: 10px;
+          display: block;
+        }
+
+        .ab-sec-title {
+          font-size: clamp(26px, 3.2vw, 38px);
+          font-weight: 600;
+          color: #2a2a24;
+          letter-spacing: -0.5px;
+        }
+
+        .ab-sec-title em {
+          font-style: normal;
+          color: #6b7c32;
+        }
+
+        /* ── SERVICES / WHAT WE DO ── */
+        .ab-services-section {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 40px 32px 72px;
+        }
+
+        .ab-services-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 24px;
+        }
+
+        .ab-service-card {
+          background: rgba(255,252,245,0.85);
+          border: 1px solid rgba(138,154,74,0.22);
+          border-radius: 18px;
+          padding: 32px 26px;
+          box-shadow: 0 10px 25px rgba(42,42,36,0.04);
+          transition: all 0.3s ease;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .ab-service-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 16px 36px rgba(42,42,36,0.08);
+          border-color: rgba(138,154,74,0.45);
+        }
+
+        .ab-service-icon {
+          width: 48px;
+          height: 48px;
+          border-radius: 12px;
+          background: rgba(138,154,74,0.14);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #4a5a1f;
+          margin-bottom: 20px;
+        }
+
+        .ab-service-title {
+          font-size: 20px;
+          font-weight: 600;
+          color: #2a2a24;
+          margin-bottom: 10px;
+        }
+
+        .ab-service-text {
+          font-size: 13.5px;
+          line-height: 1.7;
+          color: #555545;
+          margin-bottom: 20px;
+          flex-grow: 1;
+        }
+
+        .ab-service-tags {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          border-top: 1px solid rgba(138,154,74,0.15);
+          padding-top: 14px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .ab-service-tags li {
+          font-size: 12px;
+          color: #4a5a1f;
+          font-weight: 500;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .ab-check-icon {
+          color: #8a9a4a;
+          flex-shrink: 0;
+        }
+
+        /* ── WHY US STRIP ── */
+        .ab-pillars-section {
+          background: rgba(42,42,36,0.04);
+          border-top: 1px solid rgba(138,154,74,0.18);
+          border-bottom: 1px solid rgba(138,154,74,0.18);
+          padding: 56px 32px;
+        }
+
+        .ab-pillars-inner {
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        .ab-pillars-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 20px;
+        }
+
+        .ab-pillar-card {
+          background: rgba(255,255,255,0.7);
+          border: 1px solid rgba(138,154,74,0.18);
+          border-radius: 14px;
+          padding: 22px 20px;
+        }
+
+        .ab-pillar-num {
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 1.5px;
+          color: #8a9a4a;
+          margin-bottom: 8px;
+        }
+
+        .ab-pillar-title {
+          font-size: 16px;
+          font-weight: 600;
+          color: #2a2a24;
+          margin-bottom: 6px;
+        }
+
+        .ab-pillar-desc {
+          font-size: 12.5px;
+          color: #666655;
+          line-height: 1.6;
         }
 
         /* ── CTA BANNER ── */
         .ab-cta-section {
-          padding: 0 60px 96px;
-          max-width: 1300px; margin: 0 auto;
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 64px 32px 84px;
         }
-        .ab-cta-inner {
-          background: linear-gradient(135deg, #2a2a24 0%, #3d4a1f 60%, #2a3214 100%);
-          border-radius: 28px;
-          padding: 72px 80px;
-          display: flex; align-items: center;
-          justify-content: space-between; gap: 40px;
-          position: relative; overflow: hidden;
+
+        .ab-cta-box {
+          background: linear-gradient(135deg, #2a2a24 0%, #35441d 55%, #293516 100%);
+          border-radius: 24px;
+          padding: 56px 60px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 40px;
+          position: relative;
+          overflow: hidden;
+          box-shadow: 0 20px 50px rgba(42,42,36,0.18);
+          border: 1px solid rgba(138,154,74,0.3);
         }
-        .ab-cta-inner::before {
+
+        .ab-cta-box::before {
           content: '';
-          position: absolute; inset: 0;
-          background: radial-gradient(ellipse 50% 70% at 80% 50%, rgba(138,154,74,0.12) 0%, transparent 70%);
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(ellipse 50% 70% at 85% 45%, rgba(138,154,74,0.2) 0%, transparent 70%);
           pointer-events: none;
         }
-        .ab-cta-left { position: relative; z-index: 1; }
+
+        .ab-cta-content {
+          position: relative;
+          z-index: 1;
+        }
+
         .ab-cta-tag {
-          font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase;
-          color: #8a9a4a; font-weight: 600; margin-bottom: 16px;
+          font-size: 11px;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: #c8d890;
+          font-weight: 600;
+          margin-bottom: 12px;
+          display: block;
         }
+
         .ab-cta-title {
-          font-family: var(--font-sans);
-          font-size: clamp(28px, 3vw, 42px);
-          font-weight: 400; color: #e8d9b5;
-          line-height: 1.2; letter-spacing: -0.3px;
+          font-size: clamp(26px, 3vw, 38px);
+          font-weight: 600;
+          color: #f5f0e8;
+          line-height: 1.25;
+          letter-spacing: -0.5px;
+          margin-bottom: 10px;
         }
-        .ab-cta-title em { font-style: normal; font-weight: 600; color: #c8d890; }
-        .ab-cta-right { position: relative; z-index: 1; flex-shrink: 0; }
+
+        .ab-cta-title em {
+          font-style: normal;
+          color: #c8d890;
+        }
+
+        .ab-cta-sub {
+          font-size: 14px;
+          color: #c8b89a;
+          line-height: 1.6;
+          max-width: 520px;
+        }
+
+        .ab-cta-buttons {
+          position: relative;
+          z-index: 1;
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          flex-shrink: 0;
+          flex-wrap: wrap;
+        }
+
+        /* BOOK FREE CONSULTATION BUTTON WITH WORKING ARROW */
         .ab-cta-btn {
-          padding: 16px 36px;
-          background: rgba(255,252,245,0.1);
-          border: 1.5px solid rgba(200,184,154,0.4);
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 16px 32px;
+          background: #8a9a4a;
+          color: #1f2710;
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
           border-radius: 12px;
-          color: #e8d9b5; font-size: 11.5px; font-weight: 600;
-          letter-spacing: 1.8px; text-transform: uppercase;
-          cursor: pointer; font-family: var(--font-sans);
-          transition: all 0.3s ease;
+          border: none;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 6px 20px rgba(138,154,74,0.3);
+          font-family: var(--font-sans);
           white-space: nowrap;
         }
+
         .ab-cta-btn:hover {
-          background: rgba(255,252,245,0.18);
-          border-color: rgba(200,184,154,0.7);
+          background: #9ab052;
+          transform: translateY(-2px);
+          box-shadow: 0 10px 28px rgba(138,154,74,0.45);
+          color: #121908;
+        }
+
+        .ab-cta-btn:hover .ab-arrow-icon {
+          transform: translateX(5px);
+        }
+
+        .ab-arrow-icon {
+          display: inline-block;
+          transition: transform 0.3s ease;
+          flex-shrink: 0;
+        }
+
+        .ab-wa-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 15px 26px;
+          background: rgba(255,255,255,0.1);
+          border: 1.5px solid rgba(200,184,154,0.45);
+          border-radius: 12px;
+          color: #e8d9b5;
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
+          text-decoration: none;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-family: var(--font-sans);
+          white-space: nowrap;
+        }
+
+        .ab-wa-btn:hover {
+          background: rgba(255,255,255,0.18);
+          border-color: rgba(200,184,154,0.8);
+          color: #ffffff;
           transform: translateY(-2px);
         }
 
-        /* RESPONSIVE */
+        /* ── RESPONSIVE ── */
         @media (max-width: 1024px) {
-          .ab-hero-inner { grid-template-columns: 1fr; gap: 48px; }
-          .ab-stats-inner { grid-template-columns: repeat(2, 1fr); }
-          .ab-stat { border-right: none; border-bottom: 1px solid rgba(200,184,154,0.15); }
-          .ab-stat:nth-child(odd) { border-right: 1px solid rgba(200,184,154,0.15); }
-          .ab-story { grid-template-columns: 1fr; gap: 48px; }
-          .ab-values-grid { grid-template-columns: repeat(2, 1fr); }
-          .ab-team-grid { grid-template-columns: repeat(2, 1fr); }
-          .ab-cta-inner { flex-direction: column; text-align: center; padding: 48px 40px; }
+          .ab-hero-inner {
+            grid-template-columns: 1fr;
+            gap: 40px;
+          }
+          .ab-services-grid {
+            grid-template-columns: 1fr;
+          }
+          .ab-pillars-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+          .ab-cta-box {
+            flex-direction: column;
+            text-align: center;
+            padding: 44px 32px;
+            gap: 28px;
+          }
+          .ab-cta-buttons {
+            justify-content: center;
+          }
         }
+
         @media (max-width: 640px) {
-          .ab-hero, .ab-story, .ab-values-section,
-          .ab-team-section, .ab-cta-section { padding-left: 20px; padding-right: 20px; }
-          .ab-stats { padding-left: 20px; padding-right: 20px; }
-          .ab-stats-inner { grid-template-columns: repeat(2, 1fr); }
-          .ab-values-grid { grid-template-columns: 1fr; }
-          .ab-team-grid { grid-template-columns: 1fr; }
-          .ab-hero-panel { display: none; }
+          .ab-hero {
+            padding: 60px 20px 44px;
+          }
+          .ab-services-section,
+          .ab-pillars-section,
+          .ab-cta-section {
+            padding-left: 20px;
+            padding-right: 20px;
+          }
+          .ab-hero-image-card img {
+            height: 260px;
+          }
+          .ab-pillars-grid {
+            grid-template-columns: 1fr;
+          }
+          .ab-cta-box {
+            padding: 36px 20px;
+          }
+          .ab-cta-btn, .ab-wa-btn {
+            width: 100%;
+            justify-content: center;
+          }
         }
       `}</style>
 
       <div className="ab-page">
-
-        {/* ── HERO ── */}
+        {/* ── HERO SECTION ── */}
         <section className="ab-hero">
           <div className="ab-hero-bg" />
           <div className="ab-hero-inner">
             <div>
-              <div className="ab-eyebrow"><span>✦</span><span>Our Story</span><span>✦</span></div>
+              <div className="ab-eyebrow">
+                <span>✦</span>
+                <span>About Samarpan Group</span>
+                <span>✦</span>
+              </div>
               <h1>
-                Designing with <em>Soul,</em><br />
-                Building with <em>Purpose</em>
+                Building Trust, <em>Crafting Spaces</em>
               </h1>
+              <span className="ab-hero-tagline">
+                स्वप्नातील घरासाठी एक समर्पित वास्तुनिर्मिती
+              </span>
               <p className="ab-hero-desc">
-                Samarpan Group was born from a simple belief — that every home deserves to be
-                a sanctuary. Since 2016, we have been transforming spaces across Nashik and
-                Maharashtra with an unwavering commitment to craft, beauty, and meaning.
+                Samarpan Group is a Nashik-based design & construction practice providing
+                comprehensive <strong>Civil & Interior solutions</strong> under one roof.
+                From solid structural foundations to bespoke interior styling, we deliver
+                every space with dedication, transparency, and lasting quality.
               </p>
-              <button
-                className="ab-hero-cta"
-                onClick={() => {
-                  const el = document.querySelector("#contact");
-                  if (el) el.scrollIntoView({ behavior: "smooth" });
-                }}
-              >
-                Start Your Journey →
-              </button>
-            </div>
-
-            <div className="ab-hero-panel">
-              <div className="ab-panel-card">
-                <div className="ab-panel-quote">
-                  A home is not just a structure. It is the physical expression of a family's
-                  dreams, values, and love.
-                </div>
-                <div className="ab-panel-attr">— Ar. Priya Samarpan, Founder</div>
-                <div className="ab-panel-divider" />
-                <div className="ab-panel-fact">
-                  <div className="ab-panel-dot" />
-                  <div className="ab-panel-fact-text">Based in Nashik, serving all of Maharashtra</div>
-                </div>
-                <div className="ab-panel-fact">
-                  <div className="ab-panel-dot" />
-                  <div className="ab-panel-fact-text">Full-service: design, execution, and styling</div>
-                </div>
-                <div className="ab-panel-fact">
-                  <div className="ab-panel-dot" />
-                  <div className="ab-panel-fact-text">Free initial consultation for every project</div>
-                </div>
-                <div className="ab-panel-fact">
-                  <div className="ab-panel-dot" />
-                  <div className="ab-panel-fact-text">Certified architects and interior designers on team</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── STATS ── */}
-        <div className="ab-stats">
-          <div className="ab-stats-inner">
-            {STATS.map((s) => (
-              <div key={s.label} className="ab-stat">
-                <div className="ab-stat-num">
-                  {s.number.replace(/[+%]/g, "")}
-                  <span>{s.number.replace(/[^+%]/g, "")}</span>
-                </div>
-                <div className="ab-stat-label">{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ── STORY + TIMELINE ── */}
-        <div className="ab-story">
-          <div className="ab-story-left">
-            <div className="ab-section-label">Our Journey</div>
-            <h2>From One Dream<br />to <em>Hundreds of Homes</em></h2>
-            <p>
-              What began as a single-room redesign project in Nashik in 2016 has grown into
-              one of Maharashtra's most trusted interior design practices. We started with
-              a belief that good design shouldn't be a luxury — it should be a right.
-            </p>
-            <p>
-              Over the years, we have cultivated a team of passionate architects, designers,
-              and artisans who share one goal: to create spaces that genuinely improve the
-              lives of the people within them.
-            </p>
-            <p>
-              Today, Samarpan Group operates from our Panchavati studio in Nashik, with
-              projects spanning residential, commercial, and hospitality segments across
-              Nashik, Pune, and Mumbai.
-            </p>
-          </div>
-
-          <div>
-            <div className="ab-section-label">Milestones</div>
-            <div className="ab-timeline">
-              {MILESTONES.map((m) => (
-                <div key={m.year} className="ab-milestone">
-                  <div className="ab-milestone-year">{m.year}</div>
-                  <div className="ab-milestone-event">{m.event}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* ── VALUES ── */}
-        <section className="ab-values-section">
-          <div className="ab-values-inner">
-            <div className="ab-values-header">
-              <div className="ab-section-label" style={{ justifyContent: "center" }}>What We Stand For</div>
-              <h2>The Principles Behind <em>Every Space</em></h2>
-            </div>
-            <div className="ab-values-grid">
-              {VALUES.map((v) => (
-                <div key={v.title} className="ab-value-card">
-                  <span className="ab-value-icon">{v.icon}</span>
-                  <div className="ab-value-title">{v.title}</div>
-                  <div className="ab-value-desc">{v.desc}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── TEAM ── */}
-        <section className="ab-team-section">
-          <div className="ab-team-header">
-            <div className="ab-section-label">The People</div>
-            <h2>Meet the <em>Creative Minds</em></h2>
-          </div>
-          <div className="ab-team-grid">
-            {TEAM.map((member) => (
-              <div key={member.name} className="ab-team-card"
-                onMouseEnter={() => setActiveTeam(member.name)}
-                onMouseLeave={() => setActiveTeam(null)}>
-                <div
-                  className="ab-team-avatar"
-                  style={{ background: `linear-gradient(135deg, #2a2a24, ${member.accent})` }}
+              <div className="ab-hero-actions">
+                <button
+                  type="button"
+                  className="ab-btn-primary"
+                  onClick={handleConsultation}
                 >
-                  {member.initials}
-                </div>
-                <div className="ab-team-name">{member.name}</div>
-                <div className="ab-team-role">{member.role}</div>
-                <div className="ab-team-divider" />
-                <div className="ab-team-bio">{member.bio}</div>
+                  <span>Book Consultation</span>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14" />
+                    <path d="M12 5l7 7-7 7" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  className="ab-btn-secondary"
+                  onClick={handleExploreProjects}
+                >
+                  View Projects
+                </button>
               </div>
-            ))}
+            </div>
+
+            <div className="ab-hero-image-wrap">
+              <div className="ab-hero-image-card">
+                <img src={Int1} alt="Samarpan Group Project Interior" />
+                <div className="ab-floating-badge">
+                  <div>
+                    <div className="ab-badge-title">
+                      <span className="ab-badge-dot" />
+                      Civil & Interior Solutions
+                    </div>
+                    <div className="ab-badge-sub">Hanumanwadi, Panchavati, Nashik</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
+
+        {/* ── WHAT WE DO (CONCISE 3-SERVICE CARDS) ── */}
+        <section className="ab-services-section">
+          <div className="ab-sec-header">
+            <span className="ab-sec-pill">What We Do</span>
+            <h2 className="ab-sec-title">
+              Complete Solutions, <em>One Single Team</em>
+            </h2>
+          </div>
+
+          <div className="ab-services-grid">
+            {/* CARD 1: CIVIL */}
+            <div className="ab-service-card">
+              <div className="ab-service-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 21h18" />
+                  <path d="M9 8h1" />
+                  <path d="M9 12h1" />
+                  <path d="M9 16h1" />
+                  <path d="M14 8h1" />
+                  <path d="M14 12h1" />
+                  <path d="M14 16h1" />
+                  <path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16" />
+                </svg>
+              </div>
+              <h3 className="ab-service-title">Civil Construction</h3>
+              <p className="ab-service-text">
+                From ground breaking to structural completion. We execute RCC framing,
+                brickwork, plastering, and turnkey construction with meticulous engineering standards.
+              </p>
+              <ul className="ab-service-tags">
+                <li>
+                  <svg className="ab-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  Turnkey Execution & Supervision
+                </li>
+                <li>
+                  <svg className="ab-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  Structural Integrity & Durability
+                </li>
+                <li>
+                  <svg className="ab-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  Foundation to Finish
+                </li>
+              </ul>
+            </div>
+
+            {/* CARD 2: INTERIORS */}
+            <div className="ab-service-card">
+              <div className="ab-service-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                  <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+              </div>
+              <h3 className="ab-service-title">Interior Design</h3>
+              <p className="ab-service-text">
+                Creating functional and aesthetically pleasing living & commercial environments.
+                Tailored modular kitchens, woodwork, false ceiling, and lighting harmony.
+              </p>
+              <ul className="ab-service-tags">
+                <li>
+                  <svg className="ab-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  Residential & Commercial Styling
+                </li>
+                <li>
+                  <svg className="ab-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  Bespoke Modular Kitchens & Storage
+                </li>
+                <li>
+                  <svg className="ab-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  Premium Finish & Material Quality
+                </li>
+              </ul>
+            </div>
+
+            {/* CARD 3: 3D PLANNING */}
+            <div className="ab-service-card">
+              <div className="ab-service-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+                </svg>
+              </div>
+              <h3 className="ab-service-title">3D Visualization & Planning</h3>
+              <p className="ab-service-text">
+                Visualize every corner before construction begins. Realistic 3D concept renders,
+                precise architectural floor plans, and transparent material estimation.
+              </p>
+              <ul className="ab-service-tags">
+                <li>
+                  <svg className="ab-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  Photorealistic 3D Renders
+                </li>
+                <li>
+                  <svg className="ab-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  Detailed Space & Layout Planning
+                </li>
+                <li>
+                  <svg className="ab-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  Clear & Honest Budget Estimation
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* ── WHY SAMARPAN (4 SHORT PILLARS) ── */}
+        <section className="ab-pillars-section">
+          <div className="ab-pillars-inner">
+            <div className="ab-pillars-grid">
+              <div className="ab-pillar-card">
+                <div className="ab-pillar-num">01 / INTEGRATED</div>
+                <div className="ab-pillar-title">Single-Roof Solution</div>
+                <p className="ab-pillar-desc">
+                  No dealing with multiple disconnected vendors. Civil structure and interior finishing happen harmoniously.
+                </p>
+              </div>
+              <div className="ab-pillar-card">
+                <div className="ab-pillar-num">02 / TRANSPARENT</div>
+                <div className="ab-pillar-title">Honest Pricing</div>
+                <p className="ab-pillar-desc">
+                  Detailed material specifications and open itemized budgets with zero hidden surprises.
+                </p>
+              </div>
+              <div className="ab-pillar-card">
+                <div className="ab-pillar-num">03 / DEDICATED</div>
+                <div className="ab-pillar-title">Direct Supervision</div>
+                <p className="ab-pillar-desc">
+                  Consistent on-site quality checks ensuring construction precision and timely milestone handovers.
+                </p>
+              </div>
+              <div className="ab-pillar-card">
+                <div className="ab-pillar-num">04 / LOCAL</div>
+                <div className="ab-pillar-title">Nashik & Maharashtra</div>
+                <p className="ab-pillar-desc">
+                  Headquartered at Panchavati, Nashik, serving residential & commercial clients with personal care.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── CLIENT TESTIMONIALS (DYNAMIC) ── */}
+        <TestimonialsSection />
 
         {/* ── CTA BANNER ── */}
-        <div className="ab-cta-section">
-          <div className="ab-cta-inner">
-            <div className="ab-cta-left">
-              <div className="ab-cta-tag">✦ Let's Create Together</div>
-              <div className="ab-cta-title">
-                Ready to transform<br />your <em>space into a story?</em>
-              </div>
+        <section className="ab-cta-section">
+          <div className="ab-cta-box">
+            <div className="ab-cta-content">
+              <span className="ab-cta-tag">✦ Let's Connect</span>
+              <h2 className="ab-cta-title">
+                Ready to transform your <em>space?</em>
+              </h2>
+              <p className="ab-cta-sub">
+                Connect with our team for a free consultation, layout discussion, and tailored project estimate.
+              </p>
             </div>
-            <div className="ab-cta-right">
+
+            <div className="ab-cta-buttons">
               <button
+                type="button"
                 className="ab-cta-btn"
-                onClick={() => {
-                  const el = document.querySelector("#contact");
-                  if (el) el.scrollIntoView({ behavior: "smooth" });
-                }}
+                onClick={handleConsultation}
               >
-                Book Free Consultation →
+                <span>Book Free Consultation</span>
+                <svg
+                  className="ab-arrow-icon"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="M12 5l7 7-7 7" />
+                </svg>
               </button>
+
+              <a
+                href="https://wa.me/918055587237"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ab-wa-btn"
+              >
+                WhatsApp Us
+              </a>
             </div>
           </div>
-        </div>
-
+        </section>
       </div>
     </>
   );

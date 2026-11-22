@@ -67,4 +67,20 @@ export const uploadBeforeAfterSide = (projectId, index, side, file) => {
 export const deleteBeforeAfter = (projectId, index) =>
   api.delete(`/projects/${projectId}/before-after/${index}`);
 
+// Enquiries / Leads
+export const submitEnquiry = (data) => api.post("/enquiries", data);
+export const getEnquiries = (params) => api.get("/enquiries", { params });
+export const updateEnquiry = (id, data) => api.patch(`/enquiries/${id}`, data);
+export const deleteEnquiry = (id) => api.delete(`/enquiries/${id}`);
+
+// Website Settings
+export const getSettings = () => api.get("/settings");
+export const updateSettings = (data) => api.put("/settings", data);
+
+// Testimonials
+export const getTestimonials = (params) => api.get("/testimonials", { params });
+export const createTestimonial = (data) => api.post("/testimonials", data);
+export const updateTestimonial = (id, data) => api.put(`/testimonials/${id}`, data);
+export const deleteTestimonial = (id) => api.delete(`/testimonials/${id}`);
+
 export default api;

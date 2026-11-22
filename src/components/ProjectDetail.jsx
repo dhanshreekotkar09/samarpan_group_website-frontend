@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getProject, getImageSrc } from "../api/client";
 import ProjectGallery from "./ProjectGallery";
@@ -437,11 +437,9 @@ export default function ProjectDetail() {
   const [loading, setLoading] = useState(true);
 
   const [beforeAfterIdx, setBeforeAfterIdx] = useState(0);
-  const [sliderPos, setSliderPos] = useState(50);
-  const [isDragging, setIsDragging] = useState(false);
-  const [enquiryOpen, setEnquiryOpen] = useState(false);
-  const [enquiryForm, setEnquiryForm] = useState({ name: "", phone: "", email: "", message: "" });
-  const sliderRef = useRef(null);
+  const [baViewMode, setBaViewMode] = useState("sideBySide"); // "sideBySide" | "switch"
+  const [activeSwitchView, setActiveSwitchView] = useState("after"); // "before" | "after"
+  const [baLightbox, setBaLightbox] = useState(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -481,31 +479,15 @@ export default function ProjectDetail() {
     if (project?.title) setPageTitle(project.title);
   }, [project?.title]);
 
-  // Before/After slider logic
-  const handleSliderMouseDown = (e) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
+  // Close BA Lightbox on Escape
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (!isDragging || !sliderRef.current) return;
-      const rect = sliderRef.current.getBoundingClientRect();
-      const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
-      const pct = Math.min(100, Math.max(0, (x / rect.width) * 100));
-      setSliderPos(pct);
+    if (!baLightbox) return;
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") setBaLightbox(null);
     };
-    const handleMouseUp = () => setIsDragging(false);
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
-    window.addEventListener("touchmove", handleMouseMove);
-    window.addEventListener("touchend", handleMouseUp);
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-      window.removeEventListener("touchmove", handleMouseMove);
-      window.removeEventListener("touchend", handleMouseUp);
-    };
-  }, [isDragging]);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [baLightbox]);
 
   if (loading) {
     return (
@@ -590,76 +572,131 @@ export default function ProjectDetail() {
           border-radius: 16px;
         }
 
-        /* ── HERO ── */
-        .pd-hero {
-          height: 70vh; min-height: 500px;
-          position: relative; overflow: hidden;
-        }
-        .pd-hero img {
-          width: 100%; height: 100%;
-          object-fit: cover; display: block;
-        }
-        .pd-hero-overlay {
-          position: absolute; inset: 0;
-          background: linear-gradient(to top, rgba(20,28,10,0.88) 0%, rgba(20,28,10,0.3) 50%, transparent 100%);
-        }
-        .pd-hero-content {
-          position: absolute; bottom: 0; left: 0; right: 0;
-          padding: 60px;
-          max-width: 1300px; margin: 0 auto;
-        }
-        .pd-hero-eyebrow {
-          display: inline-flex; align-items: center; gap: 10px;
-          padding: 5px 16px;
-          background: rgba(255,255,255,0.1);
-          border: 1px solid rgba(255,255,255,0.2);
-          border-radius: 20px;
-          font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase;
-          color: rgba(255,255,255,0.8); margin-bottom: 20px;
-          backdrop-filter: blur(8px);
-          max-width: 100%;
-          flex-wrap: wrap;
-        }
-        .pd-hero-chip { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-        .pd-hero-meta { opacity: 0.85; }
-        .pd-hero-title {
-          font-family: var(--font-sans);
-          font-size: clamp(40px, 6vw, 72px);
-          font-weight: 300; line-height: 1.05;
-          color: #f5f0e8; letter-spacing: -2px;
-          margin-bottom: 12px; max-width: 700px;
-        }
-        .pd-hero-title em { font-style: normal; font-weight: 600; color: #c8d890; }
-        .pd-hero-subtitle {
-          font-size: 14px; font-weight: 300; color: rgba(245,240,232,0.7);
-          max-width: 500px; line-height: 1.8;
+        /* ── CONTAINER ── */
+        .pd-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 36px 32px 0;
         }
 
-        /* ── HIGHLIGHTS BAR ── */
-        .pd-highlights {
+        /* ── PROJECT HEADER ── */
+        .pd-header {
+          margin-bottom: 24px;
+        }
+
+        .pd-eyebrow {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 1.8px;
+          text-transform: uppercase;
+          color: #6b7c32;
+          margin-bottom: 10px;
+        }
+
+        .pd-title {
+          font-size: clamp(30px, 3.8vw, 46px);
+          font-weight: 600;
+          color: #2a2a24;
+          line-height: 1.15;
+          letter-spacing: -0.5px;
+          margin-bottom: 8px;
+        }
+
+        .pd-subtitle {
+          font-size: 15px;
+          color: #6a6a52;
+          line-height: 1.6;
+          margin-bottom: 14px;
+          max-width: 760px;
+        }
+
+        .pd-meta-row {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          flex-wrap: wrap;
+          font-size: 13px;
+          color: #555545;
+          padding-top: 4px;
+        }
+
+        .pd-meta-item {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .pd-meta-sep {
+          color: rgba(138,154,74,0.4);
+        }
+
+        /* ── HERO IMAGE SHOWCASE ── */
+        .pd-hero-showcase {
+          position: relative;
+          border-radius: 24px;
+          overflow: hidden;
+          background: #141712;
+          border: 1px solid rgba(138,154,74,0.25);
+          box-shadow: 0 16px 40px rgba(42,42,36,0.1);
+          margin-bottom: 40px;
+          cursor: zoom-in;
+        }
+
+        .pd-hero-showcase-bar {
+          position: absolute;
+          top: 16px;
+          left: 18px;
+          right: 18px;
+          z-index: 5;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          pointer-events: none;
+        }
+
+        .pd-hero-featured-tag {
+          background: rgba(20,28,12,0.85);
+          backdrop-filter: blur(8px);
+          border: 1px solid rgba(255,255,255,0.15);
+          color: #e8d9b5;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.8px;
+          text-transform: uppercase;
+          padding: 6px 14px;
+          border-radius: 20px;
+        }
+
+        .pd-hero-zoom-btn {
+          pointer-events: auto;
+          background: rgba(20,28,12,0.85);
+          backdrop-filter: blur(8px);
+          border: 1px solid rgba(255,255,255,0.2);
+          color: #ffffff;
+          font-size: 11px;
+          font-weight: 600;
+          padding: 6px 14px;
+          border-radius: 20px;
+          cursor: pointer;
+          transition: background 0.2s ease;
+        }
+        .pd-hero-zoom-btn:hover {
           background: #2a3a14;
-          padding: 28px 60px;
-          display: flex; align-items: center; justify-content: center;
-          gap: 0; flex-wrap: wrap;
-          overflow-x: hidden;
-          max-width: 100%;
-          box-sizing: border-box;
         }
-        .pd-highlight-item {
-          display: flex; align-items: center; gap: 12px;
-          padding: 0 36px;
-          border-right: 1px solid rgba(184,204,106,0.2);
-          min-width: 0;
+
+        .pd-hero-showcase img {
+          width: 100%;
+          max-height: 520px;
+          object-fit: cover;
+          display: block;
+          transition: transform 0.4s ease;
         }
-        .pd-highlight-item:last-child { border-right: none; }
-        .pd-highlight-icon { font-size: 20px; }
-        .pd-highlight-label {
-          font-size: 9px; font-weight: 600; letter-spacing: 1.5px;
-          text-transform: uppercase; color: #8a9a4a; margin-bottom: 2px;
-        }
-        .pd-highlight-value {
-          font-family: var(--font-sans);
-          font-size: 16px; font-weight: 400; color: #e0ecb0;
+
+        .pd-hero-showcase:hover img {
+          transform: scale(1.015);
         }
 
         /* ── SECTION WRAPPER ── */
@@ -701,408 +738,449 @@ export default function ProjectDetail() {
           color: #4a5a1f;
         }
 
-        /* ARCHITECT CARD */
-        .pd-architect-card {
-          background: linear-gradient(145deg, #2a3a14, #3d4a1f);
+        /* ── SPECS CARD (CLEAN & SOBER) ── */
+        .pd-specs-card {
+          background: #ffffff;
           border-radius: 20px;
-          padding: 32px;
-          border: 1px solid rgba(184,204,106,0.15);
-          position: relative; overflow: hidden;
+          padding: 30px;
+          border: 1px solid rgba(138,154,74,0.22);
+          box-shadow: 0 8px 24px rgba(42,42,36,0.05);
         }
-        .pd-architect-card::before {
-          content: '';
-          position: absolute; top: -30px; right: -30px;
-          width: 120px; height: 120px;
-          border-radius: 50%;
-          background: rgba(184,204,106,0.06);
-        }
-        .pd-architect-avatar {
-          width: 64px; height: 64px;
-          border-radius: 50%;
-          background: rgba(184,204,106,0.15);
-          border: 2px solid rgba(184,204,106,0.3);
-          display: flex; align-items: center; justify-content: center;
-          font-size: 28px; margin-bottom: 16px;
-        }
-        .pd-architect-name {
+        .pd-specs-title {
           font-family: var(--font-sans);
-          font-size: 22px; font-weight: 500; color: #e0ecb0;
-          margin-bottom: 4px;
+          font-size: 18px;
+          font-weight: 600;
+          color: #2a3a14;
+          margin-bottom: 20px;
+          padding-bottom: 12px;
+          border-bottom: 1px solid rgba(138,154,74,0.2);
+          display: flex;
+          align-items: center;
+          gap: 8px;
         }
-        .pd-architect-role {
-          font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
-          text-transform: uppercase; color: #8aaa60; margin-bottom: 4px;
+        .pd-specs-title::before {
+          content: '✦';
+          color: #8a9a4a;
+          font-size: 12px;
         }
-        .pd-architect-exp {
-          font-size: 11px; color: #6a8a4a; margin-bottom: 20px;
+        .pd-specs-list {
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
         }
-        .pd-architect-sep {
-          height: 1px; background: rgba(184,204,106,0.15); margin: 16px 0;
+        .pd-specs-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 12px;
+          font-size: 13px;
+          padding-bottom: 12px;
+          border-bottom: 1px dashed rgba(138,154,74,0.18);
         }
-        .pd-architect-quote {
-          font-family: var(--font-sans);
-          font-size: 15px; font-weight: 300;
-          color: #c0d890; line-height: 1.7;
+        .pd-specs-item:last-child {
+          border-bottom: none;
+          padding-bottom: 0;
         }
-        .pd-architect-quote::before { content: '"'; font-size: 24px; color: #8a9a4a; }
+        .pd-specs-label {
+          color: #7a7a68;
+          font-weight: 400;
+        }
+        .pd-specs-val {
+          color: #2a2a24;
+          font-weight: 600;
+          text-align: right;
+        }
 
-        /* ── GALLERY ── */
-        .pd-gallery-main {
-          border-radius: 20px; overflow: hidden;
-          height: 480px; margin-bottom: 16px;
-          position: relative; cursor: zoom-in;
-          background: #1a2810;
-        }
-        .pd-gallery-main img {
-          width: 100%; height: 100%;
-          object-fit: cover; display: block;
-          transition: transform 0.5s ease;
-        }
-        .pd-gallery-main:hover img { transform: scale(1.03); }
-        .pd-gallery-main-caption {
-          position: absolute; bottom: 0; left: 0; right: 0;
-          padding: 20px 24px;
-          background: linear-gradient(to top, rgba(20,28,10,0.85) 0%, transparent 100%);
-          font-size: 12px; font-weight: 300; color: rgba(245,240,232,0.85);
-          letter-spacing: 0.3px;
-        }
-        .pd-gallery-thumbs {
-          display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px;
-        }
-        .pd-gallery-thumb {
-          border-radius: 12px; overflow: hidden;
-          height: 80px; cursor: pointer;
-          border: 2px solid transparent;
-          transition: all 0.2s ease;
-          background: #1a2810;
-        }
-        .pd-gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
-        .pd-gallery-thumb.active {
-          border-color: #8a9a4a;
-          box-shadow: 0 0 0 3px rgba(138,154,74,0.2);
-        }
-        .pd-gallery-thumb:hover { border-color: rgba(138,154,74,0.5); }
 
-        /* ── BEFORE / AFTER ── */
-        .pd-ba-section { background: rgba(42,58,20,0.04); border-radius: 24px; padding: 48px; }
+
+        /* ── BEFORE / AFTER REDESIGN ── */
+        .pd-ba-section {
+          background: rgba(42,58,20,0.04);
+          border: 1px solid rgba(138,154,74,0.18);
+          border-radius: 24px;
+          padding: 36px 32px;
+        }
+        .pd-ba-top-bar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 16px;
+          margin-bottom: 28px;
+        }
         .pd-ba-toggle {
-          display: flex; gap: 10px; margin-bottom: 32px; flex-wrap: wrap;
+          display: flex; gap: 8px; flex-wrap: wrap;
         }
         .pd-ba-toggle-btn {
-          padding: 8px 20px;
+          padding: 8px 18px;
           border-radius: 20px;
-          border: 1.5px solid rgba(138,154,74,0.28);
-          background: transparent;
+          border: 1.5px solid rgba(138,154,74,0.3);
+          background: rgba(255,255,255,0.7);
           font-family: var(--font-sans);
-          font-size: 11px; font-weight: 500; letter-spacing: 0.8px;
-          color: #5a5a4a; cursor: pointer; transition: all 0.2s ease;
+          font-size: 11.5px; font-weight: 500;
+          color: #4a5a2f; cursor: pointer; transition: all 0.2s ease;
         }
         .pd-ba-toggle-btn.active {
-          background: #2a3a14; color: #c8d890;
-          border-color: transparent;
+          background: #2a3a14; color: #e8d9b5;
+          border-color: #2a3a14;
+          box-shadow: 0 4px 12px rgba(42,58,20,0.18);
         }
-        .pd-ba-slider {
-          border-radius: 16px; overflow: hidden;
-          height: 400px; position: relative;
-          cursor: ew-resize; user-select: none;
+        .pd-ba-mode-switch {
+          display: inline-flex;
+          align-items: center;
+          background: rgba(255,255,255,0.7);
+          border: 1px solid rgba(138,154,74,0.25);
+          border-radius: 20px;
+          padding: 3px;
+          gap: 4px;
         }
-        .pd-ba-after {
-          position: absolute; inset: 0;
-          overflow: hidden;
+        .pd-ba-mode-btn {
+          padding: 5px 14px;
+          font-size: 11px;
+          font-weight: 600;
+          border-radius: 16px;
+          border: none;
+          background: transparent;
+          color: #5a5a48;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          font-family: var(--font-sans);
         }
-        .pd-ba-after img { width: 100%; height: 100%; object-fit: cover; }
-        .pd-ba-before {
-          position: absolute; inset: 0;
-          overflow: hidden;
-        }
-        .pd-ba-before img {
-          width: 100%; height: 100%; object-fit: cover;
-          position: absolute; top: 0; left: 0;
-        }
-        .pd-ba-handle {
-          position: absolute; top: 0; bottom: 0;
-          width: 3px; background: #fff;
-          cursor: ew-resize; z-index: 10;
-          display: flex; align-items: center; justify-content: center;
-        }
-        .pd-ba-handle-circle {
-          width: 44px; height: 44px;
-          border-radius: 50%;
-          background: #fff;
-          display: flex; align-items: center; justify-content: center;
-          box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-          font-size: 16px; color: #2a3a14;
-          font-weight: 700;
-        }
-        .pd-ba-label {
-          position: absolute; top: 16px;
-          background: rgba(0,0,0,0.6);
-          color: #fff; font-size: 10px; font-weight: 600;
-          letter-spacing: 1.5px; text-transform: uppercase;
-          padding: 5px 12px; border-radius: 12px;
-          backdrop-filter: blur(6px);
+        .pd-ba-mode-btn.active {
+          background: #8a9a4a;
+          color: #1f2710;
         }
 
-        /* ── TIMELINE ── */
-        .pd-timeline { position: relative; }
-        .pd-timeline::before {
-          content: '';
-          position: absolute; left: 28px; top: 0; bottom: 0;
-          width: 2px; background: linear-gradient(to bottom, #8a9a4a, rgba(138,154,74,0.1));
+        /* SIDE BY SIDE GRID */
+        .pd-ba-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 24px;
+          position: relative;
         }
-        .pd-timeline-item {
-          display: flex; gap: 32px;
-          margin-bottom: 40px; position: relative;
-        }
-        .pd-timeline-dot {
-          width: 58px; height: 58px; flex-shrink: 0;
-          border-radius: 50%;
-          background: linear-gradient(135deg, #2a3a14, #3d4a1f);
-          border: 2px solid rgba(184,204,106,0.3);
-          display: flex; align-items: center; justify-content: center;
-          font-family: var(--font-sans);
-          font-size: 18px; font-weight: 300; color: #c8d890;
-          position: relative; z-index: 1;
-          box-shadow: 0 0 0 6px rgba(245,240,232,1);
-        }
-        .pd-timeline-content {
-          flex: 1; padding-top: 10px;
-        }
-        .pd-timeline-header {
-          display: flex; align-items: baseline;
-          gap: 12px; margin-bottom: 8px;
-        }
-        .pd-timeline-title {
-          font-family: var(--font-sans);
-          font-size: 20px; font-weight: 500; color: #2a2a24;
-        }
-        .pd-timeline-duration {
-          font-size: 10px; font-weight: 600; letter-spacing: 1px;
-          color: #8a9a4a;
-          padding: 3px 10px;
-          background: rgba(138,154,74,0.1);
-          border-radius: 10px;
-        }
-        .pd-timeline-desc {
-          font-size: 13px; font-weight: 300;
-          color: #5a5a4a; line-height: 1.8;
-        }
-
-        /* ── DESIGN PHILOSOPHY ── */
-        .pd-philosophy-grid {
-          display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
-        }
-        .pd-philosophy-card {
-          background: rgba(255,252,245,0.7);
-          border: 1px solid rgba(138,154,74,0.15);
-          border-radius: 16px; padding: 28px;
+        .pd-ba-card {
+          background: #ffffff;
+          border-radius: 20px;
+          overflow: hidden;
+          border: 1px solid rgba(138,154,74,0.22);
+          box-shadow: 0 8px 24px rgba(42,42,36,0.06);
           transition: all 0.3s ease;
+          display: flex;
+          flex-direction: column;
         }
-        .pd-philosophy-card:hover {
+        .pd-ba-card:hover {
           transform: translateY(-3px);
-          box-shadow: 0 12px 32px rgba(42,42,36,0.1);
+          box-shadow: 0 16px 36px rgba(42,42,36,0.12);
+        }
+        .pd-ba-card-header {
+          padding: 14px 20px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background: #fbf9f4;
+          border-bottom: 1px solid rgba(138,154,74,0.15);
+        }
+        .pd-ba-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 10.5px;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          padding: 4px 12px;
+          border-radius: 12px;
+        }
+        .pd-ba-badge.before {
+          background: rgba(180,60,40,0.1);
+          color: #a43825;
+          border: 1px solid rgba(180,60,40,0.25);
+        }
+        .pd-ba-badge.after {
+          background: rgba(138,154,74,0.18);
+          color: #3d5018;
+          border: 1px solid rgba(138,154,74,0.4);
+        }
+        .pd-ba-zoom-hint {
+          font-size: 11px;
+          color: #8a8a7a;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          transition: color 0.2s ease;
+        }
+        .pd-ba-zoom-hint:hover {
+          color: #3d5018;
+        }
+        .pd-ba-img-frame {
+          position: relative;
+          background: #1a1a16;
+          cursor: pointer;
+          overflow: hidden;
+          min-height: 280px;
+          max-height: 440px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .pd-ba-img-frame img {
+          width: 100%;
+          height: 100%;
+          max-height: 440px;
+          object-fit: cover;
+          display: block;
+          transition: transform 0.4s ease;
+        }
+        .pd-ba-card:hover .pd-ba-img-frame img {
+          transform: scale(1.025);
+        }
+        .pd-ba-card-caption {
+          padding: 12px 20px;
+          font-size: 12.5px;
+          color: #6a6a58;
+          background: #ffffff;
+        }
+
+        /* FLIP / SWITCH VIEW */
+        .pd-ba-switch-card {
+          max-width: 800px;
+          margin: 0 auto;
+          background: #ffffff;
+          border-radius: 20px;
+          overflow: hidden;
+          border: 1px solid rgba(138,154,74,0.22);
+          box-shadow: 0 12px 32px rgba(42,42,36,0.08);
+        }
+        .pd-ba-switch-bar {
+          padding: 14px 24px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background: #fbf9f4;
+          border-bottom: 1px solid rgba(138,154,74,0.15);
+        }
+        .pd-ba-switch-btns {
+          display: inline-flex;
+          gap: 8px;
+        }
+        .pd-ba-switch-btn {
+          padding: 7px 18px;
+          border-radius: 16px;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.8px;
+          text-transform: uppercase;
+          cursor: pointer;
+          border: 1.5px solid transparent;
+          transition: all 0.2s ease;
+          font-family: var(--font-sans);
+        }
+        .pd-ba-switch-btn.active-before {
+          background: #a43825;
+          color: #ffffff;
+        }
+        .pd-ba-switch-btn.inactive-before {
+          background: rgba(180,60,40,0.08);
+          color: #a43825;
+          border-color: rgba(180,60,40,0.25);
+        }
+        .pd-ba-switch-btn.active-after {
+          background: #3d5018;
+          color: #f5f0e8;
+        }
+        .pd-ba-switch-btn.inactive-after {
+          background: rgba(138,154,74,0.12);
+          color: #4a5a1f;
           border-color: rgba(138,154,74,0.3);
         }
-        .pd-philosophy-num {
-          font-family: var(--font-sans);
-          font-size: 36px; font-weight: 300; color: rgba(138,154,74,0.3);
-          line-height: 1; margin-bottom: 8px;
+        .pd-ba-switch-img {
+          min-height: 380px;
+          max-height: 520px;
+          background: #1a1a16;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          position: relative;
         }
-        .pd-philosophy-title {
-          font-size: 13px; font-weight: 600; letter-spacing: 0.5px;
-          color: #2a2a24; margin-bottom: 10px;
-        }
-        .pd-philosophy-desc {
-          font-size: 12.5px; font-weight: 300;
-          color: #5a5a4a; line-height: 1.8;
+        .pd-ba-switch-img img {
+          width: 100%;
+          height: 100%;
+          max-height: 520px;
+          object-fit: cover;
+          display: block;
         }
 
-        /* ── TESTIMONIAL ── */
-        .pd-testimonial {
-          background: linear-gradient(145deg, #2a3a14, #3d4a1f);
-          border-radius: 24px; padding: 56px;
-          position: relative; overflow: hidden;
+        /* LIGHTBOX FOR BA IMAGES */
+        .pd-ba-modal {
+          position: fixed;
+          inset: 0;
+          z-index: 99999;
+          background: rgba(18,22,14,0.92);
+          backdrop-filter: blur(8px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 24px;
+        }
+        .pd-ba-modal-content {
+          max-width: 92vw;
+          max-height: 92vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          position: relative;
+        }
+        .pd-ba-modal-content img {
+          max-width: 90vw;
+          max-height: 82vh;
+          object-fit: contain;
+          border-radius: 12px;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        .pd-ba-modal-close {
+          position: absolute;
+          top: -36px;
+          right: 0;
+          background: transparent;
+          border: none;
+          color: #ffffff;
+          font-size: 28px;
+          cursor: pointer;
+          line-height: 1;
+        }
+        .pd-ba-modal-caption {
+          margin-top: 14px;
+          color: #e8d9b5;
+          font-size: 14px;
+          font-weight: 500;
           text-align: center;
         }
-        .pd-testimonial::before {
-          content: '"';
-          position: absolute; top: -20px; left: 40px;
-          font-family: var(--font-sans);
-          font-size: 200px; font-weight: 300;
-          color: rgba(184,204,106,0.06); line-height: 1;
-          pointer-events: none;
-        }
-        .pd-testimonial-stars {
-          font-size: 20px; margin-bottom: 24px; letter-spacing: 4px;
-        }
-        .pd-testimonial-text {
-          font-family: var(--font-sans);
-          font-size: clamp(18px, 2.5vw, 24px);
-          font-weight: 400;
-          color: #e0ecb0; line-height: 1.8;
-          max-width: 760px; margin: 0 auto 32px;
-          position: relative; z-index: 1;
-        }
-        .pd-testimonial-author {
-          font-size: 13px; font-weight: 600;
-          letter-spacing: 0.5px; color: #c8d890;
-        }
-        .pd-testimonial-role {
-          font-size: 11px; font-weight: 300; color: #8aaa60;
-          margin-top: 4px;
+
+        @media (max-width: 768px) {
+          .pd-ba-section { padding: 24px 18px; }
+          .pd-ba-grid { grid-template-columns: 1fr; gap: 20px; }
+          .pd-ba-img-frame { max-height: 320px; }
+          .pd-ba-top-bar { flex-direction: column; align-items: flex-start; }
         }
 
-        /* ── ENQUIRY CTA ── */
-        .pd-enquiry-band {
-          background: #f5f0e8;
-          border-top: 1px solid rgba(138,154,74,0.15);
-          padding: 72px 60px;
-          display: flex; align-items: center; justify-content: space-between;
-          gap: 40px; flex-wrap: wrap;
+        /* ── SOBER CALL TO ACTION ── */
+        .pd-cta-box {
+          background: #ffffff;
+          border-radius: 24px;
+          padding: 48px;
+          border: 1px solid rgba(138,154,74,0.22);
+          box-shadow: 0 10px 30px rgba(42,42,36,0.04);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 36px;
+          flex-wrap: wrap;
         }
-        .pd-enquiry-left h2 {
+        .pd-cta-content {
+          max-width: 600px;
+        }
+        .pd-cta-tag {
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: #8a9a4a;
+          display: inline-block;
+          margin-bottom: 10px;
+        }
+        .pd-cta-title {
           font-family: var(--font-sans);
-          font-size: clamp(28px, 4vw, 44px);
-          font-weight: 300; color: #2a2a24;
-          letter-spacing: -1px; margin-bottom: 10px;
+          font-size: clamp(28px, 3.5vw, 40px);
+          font-weight: 300;
+          color: #2a2a24;
+          line-height: 1.2;
+          margin-bottom: 12px;
         }
-        .pd-enquiry-left h2 em { font-style: normal; font-weight: 600; color: #8a9a4a; }
-        .pd-enquiry-left p {
-          font-size: 13px; font-weight: 300; color: #5a5a4a;
-          line-height: 1.8; max-width: 420px;
+        .pd-cta-title em {
+          font-style: normal;
+          font-weight: 600;
+          color: #8a9a4a;
         }
-        .pd-enquiry-btns { display: flex; gap: 14px; flex-shrink: 0; flex-wrap: wrap; }
-        .pd-enquiry-primary {
-          padding: 16px 36px;
-          background: linear-gradient(135deg, #2a3a14, #3d4a1f);
-          color: #c8d890; font-family: var(--font-sans);
-          font-size: 11px; font-weight: 700; letter-spacing: 2px;
-          text-transform: uppercase; border: none; border-radius: 12px;
-          cursor: pointer; box-shadow: 0 8px 24px rgba(42,58,20,0.25);
-          transition: all 0.3s ease;
+        .pd-cta-sub {
+          font-size: 14px;
+          font-weight: 300;
+          line-height: 1.7;
+          color: #555545;
+          margin: 0;
         }
-        .pd-enquiry-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(42,58,20,0.35); }
-        .pd-enquiry-secondary {
-          padding: 16px 36px;
-          background: transparent;
-          border: 1.5px solid rgba(138,154,74,0.35);
-          color: #4a5a1f; font-family: var(--font-sans);
-          font-size: 11px; font-weight: 600; letter-spacing: 2px;
-          text-transform: uppercase; border-radius: 12px;
-          cursor: pointer; transition: all 0.3s ease;
+        .pd-cta-buttons {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          flex-wrap: wrap;
         }
-        .pd-enquiry-secondary:hover { border-color: rgba(138,154,74,0.7); background: rgba(138,154,74,0.06); }
-
-        /* ── ENQUIRY MODAL ── */
-        .pd-modal-overlay {
-          position: fixed; inset: 0; z-index: 200;
-          background: rgba(20,28,10,0.88);
-          backdrop-filter: blur(14px);
-          display: flex; align-items: center; justify-content: center;
-          padding: 24px;
-          animation: fadeIn 0.2s ease;
-        }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .pd-modal {
-          background: #f5f0e8;
-          border-radius: 24px; overflow: hidden;
-          max-width: 560px; width: 100%;
-          box-shadow: 0 40px 100px rgba(0,0,0,0.5);
-          animation: slideUp 0.3s ease;
-        }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .pd-modal-header {
-          background: linear-gradient(135deg, #2a3a14, #3d4a1f);
-          padding: 32px 36px;
-          display: flex; align-items: flex-start; justify-content: space-between;
-        }
-        .pd-modal-header h3 {
+        .pd-cta-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 14px 26px;
+          background: #2a3a14;
+          color: #f5f0e8;
+          border-radius: 14px;
+          border: none;
           font-family: var(--font-sans);
-          font-size: 28px; font-weight: 300; color: #e0ecb0;
-          letter-spacing: -0.5px;
-        }
-        .pd-modal-header p {
-          font-size: 12px; font-weight: 300; color: #8aaa60;
-          margin-top: 4px;
-        }
-        .pd-modal-close {
-          width: 36px; height: 36px;
-          background: rgba(255,255,255,0.1);
-          border: 1px solid rgba(255,255,255,0.2);
-          border-radius: 50%; color: #e0ecb0;
-          font-size: 16px; cursor: pointer;
-          display: flex; align-items: center; justify-content: center;
-          flex-shrink: 0; transition: all 0.2s ease;
-        }
-        .pd-modal-close:hover { background: rgba(255,255,255,0.2); }
-        .pd-modal-body { padding: 36px; }
-        .pd-modal-field { margin-bottom: 20px; }
-        .pd-modal-label {
-          display: block; font-size: 10px; font-weight: 600;
-          letter-spacing: 1.5px; text-transform: uppercase;
-          color: #6a7a4a; margin-bottom: 8px;
-        }
-        .pd-modal-input {
-          width: 100%; padding: 13px 16px;
-          background: rgba(255,252,245,0.9);
-          border: 1.5px solid rgba(138,154,74,0.2);
-          border-radius: 10px;
-          font-family: var(--font-sans);
-          font-size: 13px; font-weight: 300; color: #2a2a24;
-          outline: none; transition: border-color 0.2s ease;
-        }
-        .pd-modal-input:focus { border-color: rgba(138,154,74,0.55); }
-        .pd-modal-textarea { min-height: 90px; resize: vertical; }
-        .pd-modal-submit {
-          width: 100%; padding: 15px;
-          background: linear-gradient(135deg, #2a3a14, #3d4a1f);
-          color: #c8d890; font-family: var(--font-sans);
-          font-size: 11px; font-weight: 700; letter-spacing: 2px;
-          text-transform: uppercase; border: none; border-radius: 12px;
-          cursor: pointer; margin-top: 8px;
+          font-size: 12.5px;
+          font-weight: 600;
+          letter-spacing: 0.8px;
+          text-decoration: none;
+          cursor: pointer;
           transition: all 0.25s ease;
+          box-shadow: 0 6px 18px rgba(42,58,20,0.18);
         }
-        .pd-modal-submit:hover { background: linear-gradient(135deg, #3d4a1f, #4d5a2f); }
+        .pd-cta-btn:hover {
+          background: #3d5018;
+          color: #ffffff;
+          transform: translateY(-2px);
+          box-shadow: 0 10px 24px rgba(42,58,20,0.25);
+        }
+        .pd-cta-btn svg {
+          transition: transform 0.2s ease;
+        }
+        .pd-cta-btn:hover svg {
+          transform: translateX(3px);
+        }
+        .pd-wa-btn {
+          display: inline-flex;
+          align-items: center;
+          padding: 13px 22px;
+          border-radius: 14px;
+          border: 1.5px solid rgba(138,154,74,0.35);
+          background: #ffffff;
+          color: #2a3a14;
+          font-family: var(--font-sans);
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 0.6px;
+          text-decoration: none;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        .pd-wa-btn:hover {
+          border-color: #8a9a4a;
+          background: rgba(138,154,74,0.08);
+          transform: translateY(-2px);
+        }
 
         /* ── RESPONSIVE ── */
         @media (max-width: 1100px) {
           .pd-overview-grid { grid-template-columns: 1fr; gap: 40px; }
-          .pd-topbar, .pd-hero-content, .pd-section, .pd-highlights, .pd-enquiry-band { padding-left: 32px; padding-right: 32px; }
+          .pd-topbar, .pd-container, .pd-section { padding-left: 32px; padding-right: 32px; }
           .pd-gallery-thumbs { grid-template-columns: repeat(3, 1fr); }
         }
         @media (max-width: 720px) {
-          .pd-hero { height: 58vh; min-height: 380px; }
-          .pd-topbar, .pd-hero-content, .pd-section, .pd-highlights, .pd-enquiry-band { padding-left: 20px; padding-right: 20px; }
-          .pd-hero-content { padding-bottom: 32px; padding-top: 28px; }
-          .pd-hero-eyebrow {
-            flex-direction: column; align-items: flex-start; gap: 8px;
-            padding: 0; margin-bottom: 14px;
-            background: none; border: none; backdrop-filter: none; border-radius: 0;
-          }
-          .pd-hero-chip {
-            padding: 6px 12px;
-            background: rgba(255,255,255,0.14);
-            border: 1px solid rgba(255,255,255,0.22);
-            border-radius: 999px;
-            backdrop-filter: blur(8px);
-            font-size: 8px; letter-spacing: 1.6px;
-          }
-          .pd-hero-meta {
-            padding-left: 2px;
-            font-size: 10px; letter-spacing: 1.4px;
-            color: rgba(255,255,255,0.72);
-            line-height: 1.5;
-          }
-          .pd-hero-title { font-size: 32px; letter-spacing: -0.6px; line-height: 1.12; }
-          .pd-highlights { gap: 8px; }
-          .pd-highlight-item { padding: 0 16px; border-right: none; border-bottom: 1px solid rgba(184,204,106,0.15); padding-bottom: 16px; }
-          .pd-philosophy-grid { grid-template-columns: 1fr; }
-          .pd-gallery-thumbs { grid-template-columns: repeat(3, 1fr); }
-          .pd-testimonial { padding: 36px 28px; }
-          .pd-enquiry-band { flex-direction: column; }
-          .pd-timeline::before { left: 22px; }
-          .pd-timeline-dot { width: 46px; height: 46px; font-size: 14px; }
-          .pd-ba-section { padding: 28px 20px; }
+          .pd-topbar, .pd-container, .pd-section { padding-left: 20px; padding-right: 20px; }
+          .pd-title { font-size: 30px; }
+          .pd-cta-box { padding: 32px 24px; flex-direction: column; align-items: flex-start; }
+          .pd-cta-buttons { width: 100%; flex-direction: column; align-items: stretch; }
+          .pd-cta-btn, .pd-wa-btn { justify-content: center; }
+          .pd-ba-section { padding: 24px 16px; }
         }
       `}</style>
 
@@ -1110,43 +1188,75 @@ export default function ProjectDetail() {
 
         {/* ── TOP NAV BAR ── */}
         <div className="pd-topbar">
-          <button className="pd-back-btn" onClick={() => navigate("/projects")}>
+          <button
+            type="button"
+            className="pd-back-btn"
+            onClick={() => {
+              navigate("/projects");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
             <div className="pd-back-arrow">←</div>
-            All Projects
+            <span>Back to Projects</span>
           </button>
           <span className="pd-topbar-cat">{project.category}</span>
         </div>
 
-        {/* ── HERO ── */}
-        <div className="pd-hero">
-          <img src={heroImage} alt={project.title} />
-          <div className="pd-hero-overlay" />
-          <div className="pd-hero-content">
-            <div className="pd-hero-eyebrow">
-              <span className="pd-hero-chip">✦ {project.category}</span>
-              <span className="pd-hero-meta">
-                {[project.year, project.location].filter(Boolean).join("  ·  ")}
-              </span>
+        {/* ── CLEAN SOBER PROJECT HEADER & HERO SHOWCASE ── */}
+        <div className="pd-container">
+          <div className="pd-header">
+            <span className="pd-eyebrow">
+              ✦ {project.category} · {project.location}
+            </span>
+            <h1 className="pd-title">{project.title}</h1>
+            {project.subtitle && (
+              <p className="pd-subtitle">{project.subtitle}</p>
+            )}
+            <div className="pd-meta-row">
+              <span className="pd-meta-item">📍 {project.location}</span>
+              {project.area && (
+                <>
+                  <span className="pd-meta-sep">·</span>
+                  <span className="pd-meta-item">📐 {project.area}</span>
+                </>
+              )}
+              {project.year && (
+                <>
+                  <span className="pd-meta-sep">·</span>
+                  <span className="pd-meta-item">🗓️ Completed {project.year}</span>
+                </>
+              )}
+              {project.duration && (
+                <>
+                  <span className="pd-meta-sep">·</span>
+                  <span className="pd-meta-item">⏱️ {project.duration}</span>
+                </>
+              )}
             </div>
-            <h1 className="pd-hero-title">
-              {project.title.split(" ").slice(0, -1).join(" ")}{" "}
-              <em>{project.title.split(" ").slice(-1)}</em>
-            </h1>
-            <p className="pd-hero-subtitle">{project.subtitle}</p>
           </div>
-        </div>
 
-        {/* ── HIGHLIGHTS BAR ── */}
-        <div className="pd-highlights">
-          {(project.highlights || []).map((h, i) => (
-            <div key={i} className="pd-highlight-item">
-              <div className="pd-highlight-icon">{h.icon}</div>
-              <div>
-                <div className="pd-highlight-label">{h.label}</div>
-                <div className="pd-highlight-value">{h.value}</div>
+          {/* ── MAIN HERO SHOWCASE ── */}
+          {heroImage && (
+            <div
+              className="pd-hero-showcase"
+              onClick={() =>
+                setBaLightbox({
+                  img: heroImage,
+                  caption: `${project.title} — Featured Project View (${project.location})`,
+                })
+              }
+            >
+              <div className="pd-hero-showcase-bar">
+                <span className="pd-hero-featured-tag">
+                  ✦ Featured Project View
+                </span>
+                <span className="pd-hero-zoom-btn">
+                  🔍 Click to Zoom
+                </span>
               </div>
+              <img src={heroImage} alt={project.title} />
             </div>
-          ))}
+          )}
         </div>
 
         {/* ── OVERVIEW ── */}
@@ -1155,7 +1265,10 @@ export default function ProjectDetail() {
           <div className="pd-overview-grid">
             <div>
               <h2 className="pd-section-title">About this <em>Project</em></h2>
-              <p className="pd-overview-text">{project.overview}</p>
+              <p className="pd-overview-text">
+                {project.overview ||
+                  `A tailored ${project.category?.toLowerCase() || "interior"} execution by Samarpan Group in ${project.location || "Nashik, Maharashtra"}. Designed with attention to spatial optimization, functional efficiency, and bespoke craftsmanship to create an inspiring, long-lasting space.`}
+              </p>
               <div className="pd-overview-tags">
                 {(project.tags || []).map((t) => (
                   <span key={t} className="pd-overview-tag">{t}</span>
@@ -1163,17 +1276,40 @@ export default function ProjectDetail() {
               </div>
             </div>
 
-            {/* ARCHITECT CARD */}
-            {project.architect?.name && (
-            <div className="pd-architect-card">
-              <div className="pd-architect-avatar">👷</div>
-              <div className="pd-architect-name">{project.architect.name}</div>
-              <div className="pd-architect-role">{project.architect.role}</div>
-              <div className="pd-architect-exp">{project.architect.experience} · {project.architect.specialization}</div>
-              <div className="pd-architect-sep" />
-              <div className="pd-architect-quote">{project.architect.quote}</div>
+            {/* SPECS CARD */}
+            <div className="pd-specs-card">
+              <div className="pd-specs-title">Project Summary</div>
+              <div className="pd-specs-list">
+                <div className="pd-specs-item">
+                  <span className="pd-specs-label">Location</span>
+                  <span className="pd-specs-val">{project.location}</span>
+                </div>
+                {project.area && (
+                  <div className="pd-specs-item">
+                    <span className="pd-specs-label">Total Area</span>
+                    <span className="pd-specs-val">{project.area}</span>
+                  </div>
+                )}
+                <div className="pd-specs-item">
+                  <span className="pd-specs-label">Category</span>
+                  <span className="pd-specs-val">{project.category}</span>
+                </div>
+                {project.duration && (
+                  <div className="pd-specs-item">
+                    <span className="pd-specs-label">Timeline</span>
+                    <span className="pd-specs-val">{project.duration}</span>
+                  </div>
+                )}
+                <div className="pd-specs-item">
+                  <span className="pd-specs-label">Scope</span>
+                  <span className="pd-specs-val">Civil & Interior</span>
+                </div>
+                <div className="pd-specs-item">
+                  <span className="pd-specs-label">Execution Firm</span>
+                  <span className="pd-specs-val">Samarpan Group, Nashik</span>
+                </div>
+              </div>
             </div>
-            )}
           </div>
         </div>
 
@@ -1181,193 +1317,309 @@ export default function ProjectDetail() {
         <div className="pd-section" style={{ paddingTop: 0 }}>
           <div className="pd-section-label">Project Gallery</div>
           <h2 className="pd-section-title">Visual <em>Walkthrough</em></h2>
-          {heroImage && (
-            <div className="pd-gallery-main" style={{ marginBottom: 24 }}>
-              <img src={heroImage} alt={project.title} />
-              <div className="pd-gallery-main-caption">{project.title}</div>
-            </div>
-          )}
           <ProjectGallery media={project.media || []} gallery={project.gallery} accentColor={accentColor} />
         </div>
 
         {/* ── BEFORE / AFTER ── */}
-        {(project.beforeAfter?.length > 0) && (
-        <div className="pd-section" style={{ paddingTop: 0 }}>
-          <div className="pd-section-label">Transformation</div>
-          <h2 className="pd-section-title">Before & <em>After</em></h2>
-          <div className="pd-ba-section">
-            <div className="pd-ba-toggle">
-              {project.beforeAfter.map((ba, i) => (
-                <button
-                  key={i}
-                  className={`pd-ba-toggle-btn ${i === beforeAfterIdx ? "active" : ""}`}
-                  onClick={() => { setBeforeAfterIdx(i); setSliderPos(50); }}
-                >
-                  {ba.label}
-                </button>
-              ))}
-            </div>
-            <div
-              className="pd-ba-slider"
-              ref={sliderRef}
-              onMouseDown={handleSliderMouseDown}
-              onTouchStart={handleSliderMouseDown}
-            >
-              {/* AFTER (base) */}
-              <div className="pd-ba-after">
-                <img src={resolveImg(ba.after)} alt="After" />
-              </div>
-              {/* BEFORE (clipped) */}
-              <div className="pd-ba-before" style={{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}>
-                <img src={resolveImg(ba.before)} alt="Before" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              </div>
-              {/* HANDLE */}
-              <div className="pd-ba-handle" style={{ left: `${sliderPos}%` }}>
-                <div className="pd-ba-handle-circle">⇔</div>
-              </div>
-              {/* LABELS */}
-              <div className="pd-ba-label" style={{ left: 16 }}>Before</div>
-              <div className="pd-ba-label" style={{ right: 16 }}>After</div>
-            </div>
-            <p style={{ textAlign: "center", marginTop: 16, fontSize: 11, color: "#8a9a6a", letterSpacing: 1 }}>
-              ← Drag the slider to compare →
-            </p>
-          </div>
-        </div>
-        )}
+        {project.beforeAfter?.length > 0 && ba && (
+          <div className="pd-section" style={{ paddingTop: 0 }}>
+            <div className="pd-section-label">Real Transformation</div>
+            <h2 className="pd-section-title">Before & <em>After</em></h2>
 
-        {/* ── DESIGN PHILOSOPHY ── */}
-        {(project.designPhilosophy?.length > 0) && (
-        <div className="pd-section" style={{ paddingTop: 0 }}>
-          <div className="pd-section-label">Design Approach</div>
-          <h2 className="pd-section-title">Our Design <em>Philosophy</em></h2>
-          <div className="pd-philosophy-grid">
-            {project.designPhilosophy.map((p, i) => (
-              <div key={i} className="pd-philosophy-card">
-                <div className="pd-philosophy-num">0{i + 1}</div>
-                <div className="pd-philosophy-title">{p.title}</div>
-                <div className="pd-philosophy-desc">{p.desc}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-        )}
+            <div className="pd-ba-section">
+              {/* TOP CONTROLS: Space Tabs + View Mode Toggle */}
+              <div className="pd-ba-top-bar">
+                {/* Space Selector Tabs */}
+                <div className="pd-ba-toggle">
+                  {project.beforeAfter.map((item, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      className={`pd-ba-toggle-btn ${i === beforeAfterIdx ? "active" : ""}`}
+                      onClick={() => setBeforeAfterIdx(i)}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
 
-        {/* ── TIMELINE ── */}
-        {(project.timeline?.length > 0) && (
-        <div className="pd-section" style={{ paddingTop: 0 }}>
-          <div className="pd-section-label">Project Journey</div>
-          <h2 className="pd-section-title">How We <em>Worked</em></h2>
-          <div className="pd-timeline">
-            {project.timeline.map((step, i) => (
-              <div key={i} className="pd-timeline-item">
-                <div className="pd-timeline-dot">{step.phase}</div>
-                <div className="pd-timeline-content">
-                  <div className="pd-timeline-header">
-                    <div className="pd-timeline-title">{step.title}</div>
-                    <div className="pd-timeline-duration">{step.duration}</div>
-                  </div>
-                  <div className="pd-timeline-desc">{step.desc}</div>
+                {/* View Mode Toggle: Side-by-side or Quick Switch */}
+                <div className="pd-ba-mode-switch">
+                  <button
+                    type="button"
+                    className={`pd-ba-mode-btn ${baViewMode === "sideBySide" ? "active" : ""}`}
+                    onClick={() => setBaViewMode("sideBySide")}
+                  >
+                    Side-by-Side
+                  </button>
+                  <button
+                    type="button"
+                    className={`pd-ba-mode-btn ${baViewMode === "switch" ? "active" : ""}`}
+                    onClick={() => setBaViewMode("switch")}
+                  >
+                    Direct Switch
+                  </button>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-        )}
 
-        {/* ── TESTIMONIAL ── */}
-        {project.testimonial?.text && (
-        <div className="pd-section" style={{ paddingTop: 0 }}>
-          <div className="pd-section-label">Client Voice</div>
-          <h2 className="pd-section-title">What Our <em>Client Said</em></h2>
-          <div className="pd-testimonial">
-            <div className="pd-testimonial-stars">
-              {"★".repeat(project.testimonial.rating || 5)}
+              {/* MODE 1: SIDE BY SIDE */}
+              {baViewMode === "sideBySide" ? (
+                <div className="pd-ba-grid">
+                  {/* BEFORE CARD */}
+                  <div className="pd-ba-card">
+                    <div className="pd-ba-card-header">
+                      <span className="pd-ba-badge before">
+                        <span>●</span> Before / Initial Site
+                      </span>
+                      <span
+                        className="pd-ba-zoom-hint"
+                        onClick={() =>
+                          setBaLightbox({
+                            img: resolveImg(ba.before),
+                            caption: `${ba.label} — Before (Initial Site)`,
+                          })
+                        }
+                      >
+                        🔍 View Full
+                      </span>
+                    </div>
+                    <div
+                      className="pd-ba-img-frame"
+                      onClick={() =>
+                        setBaLightbox({
+                          img: resolveImg(ba.before),
+                          caption: `${ba.label} — Before (Initial Site)`,
+                        })
+                      }
+                    >
+                      <img
+                        src={resolveImg(ba.before)}
+                        alt={`Before - ${ba.label}`}
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="pd-ba-card-caption">
+                      Original raw space before Samarpan Group renovation
+                    </div>
+                  </div>
+
+                  {/* AFTER CARD */}
+                  <div className="pd-ba-card">
+                    <div className="pd-ba-card-header">
+                      <span className="pd-ba-badge after">
+                        <span>✦</span> After / Transformation
+                      </span>
+                      <span
+                        className="pd-ba-zoom-hint"
+                        onClick={() =>
+                          setBaLightbox({
+                            img: resolveImg(ba.after),
+                            caption: `${ba.label} — After (Finished Space)`,
+                          })
+                        }
+                      >
+                        🔍 View Full
+                      </span>
+                    </div>
+                    <div
+                      className="pd-ba-img-frame"
+                      onClick={() =>
+                        setBaLightbox({
+                          img: resolveImg(ba.after),
+                          caption: `${ba.label} — After (Finished Space)`,
+                        })
+                      }
+                    >
+                      <img
+                        src={resolveImg(ba.after)}
+                        alt={`After - ${ba.label}`}
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="pd-ba-card-caption">
+                      Completed execution with bespoke finishes & styling
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* MODE 2: DIRECT SWITCH */
+                <div className="pd-ba-switch-card">
+                  <div className="pd-ba-switch-bar">
+                    <div className="pd-ba-switch-btns">
+                      <button
+                        type="button"
+                        className={`pd-ba-switch-btn ${
+                          activeSwitchView === "before"
+                            ? "active-before"
+                            : "inactive-before"
+                        }`}
+                        onClick={() => setActiveSwitchView("before")}
+                      >
+                        ● View Before
+                      </button>
+                      <button
+                        type="button"
+                        className={`pd-ba-switch-btn ${
+                          activeSwitchView === "after"
+                            ? "active-after"
+                            : "inactive-after"
+                        }`}
+                        onClick={() => setActiveSwitchView("after")}
+                      >
+                        ✦ View After
+                      </button>
+                    </div>
+
+                    <span
+                      className="pd-ba-zoom-hint"
+                      onClick={() =>
+                        setBaLightbox({
+                          img: resolveImg(
+                            activeSwitchView === "before" ? ba.before : ba.after
+                          ),
+                          caption: `${ba.label} — ${
+                            activeSwitchView === "before"
+                              ? "Before (Initial Site)"
+                              : "After (Finished Space)"
+                          }`,
+                        })
+                      }
+                    >
+                      🔍 Click to Zoom
+                    </span>
+                  </div>
+
+                  <div
+                    className="pd-ba-switch-img"
+                    onClick={() =>
+                      setBaLightbox({
+                        img: resolveImg(
+                          activeSwitchView === "before" ? ba.before : ba.after
+                        ),
+                        caption: `${ba.label} — ${
+                          activeSwitchView === "before"
+                            ? "Before (Initial Site)"
+                            : "After (Finished Space)"
+                        }`,
+                      })
+                    }
+                  >
+                    <img
+                      src={resolveImg(
+                        activeSwitchView === "before" ? ba.before : ba.after
+                      )}
+                      alt={activeSwitchView === "before" ? "Before" : "After"}
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="pd-ba-card-caption" style={{ textAlign: "center" }}>
+                    Showing:{" "}
+                    <strong>
+                      {activeSwitchView === "before"
+                        ? "Initial Raw Site"
+                        : "Samarpan Transformation"}
+                    </strong>{" "}
+                    ({ba.label})
+                  </div>
+                </div>
+              )}
+
+              <p
+                style={{
+                  textAlign: "center",
+                  marginTop: 20,
+                  fontSize: 12,
+                  color: "#6a7a50",
+                  letterSpacing: 0.5,
+                }}
+              >
+                💡 फोटोवर क्लिक करून तुम्ही संपूर्ण हाय-रिझोल्यूशन इमेज झूम करू शकता.
+              </p>
             </div>
-            <p className="pd-testimonial-text">"{project.testimonial.text}"</p>
-            <div className="pd-testimonial-author">{project.testimonial.author}</div>
-            <div className="pd-testimonial-role">{project.testimonial.role}</div>
           </div>
-        </div>
         )}
 
-        {/* ── ENQUIRY CTA ── */}
-        <div className="pd-enquiry-band">
-          <div className="pd-enquiry-left">
-            <h2>Inspired by this <em>Project?</em></h2>
-            <p>Let's talk about how we can create something equally special — or even better — for your space.</p>
-          </div>
-          <div className="pd-enquiry-btns">
-            <button className="pd-enquiry-primary" onClick={() => setEnquiryOpen(true)}>
-              Enquire About This Style →
-            </button>
-            <button className="pd-enquiry-secondary" onClick={() => navigate("/projects")}>
-              ← See All Projects
-            </button>
+        {/* ── CALL TO ACTION BANNER ── */}
+        <div className="pd-section" style={{ paddingTop: 0 }}>
+          <div className="pd-cta-box">
+            <div className="pd-cta-content">
+              <span className="pd-cta-tag">✦ Let's Discuss Your Project</span>
+              <h2 className="pd-cta-title">
+                Inspired by this <em>project?</em>
+              </h2>
+              <p className="pd-cta-sub">
+                Connect with our team to discuss your floor plan, civil construction, or bespoke interior requirements.
+              </p>
+            </div>
+
+            <div className="pd-cta-buttons">
+              <button
+                type="button"
+                className="pd-cta-btn"
+                onClick={() => {
+                  navigate("/contact");
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              >
+                <span>Book Free Consultation</span>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="M12 5l7 7-7 7" />
+                </svg>
+              </button>
+
+              <a
+                href="https://wa.me/918055587237"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="pd-wa-btn"
+              >
+                WhatsApp Us
+              </a>
+
+              <button
+                type="button"
+                className="pd-wa-btn"
+                onClick={() => {
+                  navigate("/projects");
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              >
+                ← All Projects
+              </button>
+            </div>
           </div>
         </div>
 
       </div>
 
-      {/* ── ENQUIRY MODAL ── */}
-      {enquiryOpen && (
-        <div className="pd-modal-overlay" onClick={() => setEnquiryOpen(false)}>
-          <div className="pd-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="pd-modal-header">
-              <div>
-                <h3>Start Your Project</h3>
-                <p>Inspired by {project.title} — tell us about your space</p>
-              </div>
-              <button className="pd-modal-close" onClick={() => setEnquiryOpen(false)}>✕</button>
-            </div>
-            <div className="pd-modal-body">
-              <div className="pd-modal-field">
-                <label className="pd-modal-label">Your Name</label>
-                <input
-                  className="pd-modal-input"
-                  placeholder="e.g. Rajesh Sharma"
-                  value={enquiryForm.name}
-                  onChange={(e) => setEnquiryForm({ ...enquiryForm, name: e.target.value })}
-                />
-              </div>
-              <div className="pd-modal-field">
-                <label className="pd-modal-label">Phone Number</label>
-                <input
-                  className="pd-modal-input"
-                  placeholder="+91 98765 43210"
-                  value={enquiryForm.phone}
-                  onChange={(e) => setEnquiryForm({ ...enquiryForm, phone: e.target.value })}
-                />
-              </div>
-              <div className="pd-modal-field">
-                <label className="pd-modal-label">Email Address</label>
-                <input
-                  className="pd-modal-input"
-                  placeholder="your@email.com"
-                  value={enquiryForm.email}
-                  onChange={(e) => setEnquiryForm({ ...enquiryForm, email: e.target.value })}
-                />
-              </div>
-              <div className="pd-modal-field">
-                <label className="pd-modal-label">Tell Us About Your Space</label>
-                <textarea
-                  className="pd-modal-input pd-modal-textarea"
-                  placeholder="e.g. 3BHK flat in Nashik, looking for a similar style to this project..."
-                  value={enquiryForm.message}
-                  onChange={(e) => setEnquiryForm({ ...enquiryForm, message: e.target.value })}
-                />
-              </div>
-              <button
-                className="pd-modal-submit"
-                onClick={() => {
-                  alert("Thank you! We'll contact you within 24 hours. 🌿");
-                  setEnquiryOpen(false);
-                  setEnquiryForm({ name: "", phone: "", email: "", message: "" });
-                }}
-              >
-                Send Enquiry →
-              </button>
-            </div>
+
+      {/* ── BEFORE / AFTER LIGHTBOX ── */}
+      {baLightbox && (
+        <div className="pd-ba-modal" onClick={() => setBaLightbox(null)}>
+          <div
+            className="pd-ba-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="pd-ba-modal-close"
+              onClick={() => setBaLightbox(null)}
+              aria-label="Close"
+            >
+              ✕
+            </button>
+            <img src={baLightbox.img} alt={baLightbox.caption} />
+            <div className="pd-ba-modal-caption">{baLightbox.caption}</div>
           </div>
         </div>
       )}

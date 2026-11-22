@@ -3,13 +3,18 @@ import Navbar from './components/Navbar';
 import AboutUs from './components/AboutUs';
 import Footer from './components/Footer';
 import ContactPage from './components/Contact';
+import ServicesPage from './components/Services';
 import ProjectsPage from './components/Projects';
 import ProjectDetail from './components/ProjectDetail';
 import HomePage from './components/Home';
+import FloatingWhatsApp from './components/FloatingWhatsApp';
 import AdminLogin from './admin/AdminLogin';
 import AdminLayout from './admin/AdminLayout';
 import AdminProjects from './admin/AdminProjects';
 import AdminProjectForm from './admin/AdminProjectForm';
+import AdminEnquiries from './admin/AdminEnquiries';
+import AdminSettings from './admin/AdminSettings';
+import AdminTestimonials from './admin/AdminTestimonials';
 import PageTitle from './components/PageTitle';
 import './App.css';
 
@@ -24,6 +29,7 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutUs />} />
+        <Route path="/services" element={<ServicesPage />} />
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/projects/:id" element={<ProjectDetail />} />
         <Route path="/contact" element={<ContactPage />} />
@@ -34,9 +40,13 @@ function AppContent() {
           <Route path="projects" element={<AdminProjects />} />
           <Route path="projects/new" element={<AdminProjectForm />} />
           <Route path="projects/:id" element={<AdminProjectForm />} />
+          <Route path="enquiries" element={<AdminEnquiries />} />
+          <Route path="settings" element={<AdminSettings />} />
+          <Route path="testimonials" element={<AdminTestimonials />} />
         </Route>
       </Routes>
       {!isAdmin && <Footer />}
+      {!isAdmin && <FloatingWhatsApp />}
     </div>
   );
 }

@@ -1,44 +1,19 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/sg_logo.jpg";
+import { getSettings } from "../api/client";
 
-// ── CONTACT CONSTANTS (shared across navbar) ──
-const PHONE      = "+91 80555 87237";
-const PHONE_LINK = "tel:+918055587237";
-const EMAIL      = "thesamarpaninteriors@gmail.com";
-const EMAIL_LINK = "https://mail.google.com/mail/?view=cm&to=thesamarpaninteriors@gmail.com";
-const WHATSAPP   = "https://wa.me/918055587237";
-const INSTAGRAM  = "https://www.instagram.com/samarpan_group_interiors?igsh=dmlvb2R5YzRiNmhw";
-const FACEBOOK   = "https://www.facebook.com/share/1B978MBdLy/";
+// ── DEFAULT CONTACT CONSTANTS (shared across navbar) ──
+const DEFAULT_PHONE     = "+91 80555 87237";
+const DEFAULT_EMAIL     = "thesamarpaninteriors@gmail.com";
+const DEFAULT_WHATSAPP  = "https://wa.me/918055587237";
+const DEFAULT_INSTAGRAM = "https://www.instagram.com/samarpan_group_interiors?igsh=dmlvb2R5YzRiNmhw";
+const DEFAULT_FACEBOOK  = "https://www.facebook.com/share/1B978MBdLy/";
 
 const NAV_LINKS = [
   { label: "Home",     href: "#home",     path: "/" },
   { label: "About Us", href: "#about",    path: "/about" },
-  {
-    label: "Services",
-    href: "#services",
-    path: "/",
-    dropdown: [
-      {
-        title: "Civil",
-        items: [
-          "Structural Excellence",
-          "Foundation to Finish",
-          "Engineered with Precision",
-          "Turnkey Construction",
-        ],
-      },
-      {
-        title: "Interior",
-        items: [
-          "Bespoke Interiors",
-          "Functional Elegance",
-          "3D Visualized Design",
-          "Crafted With Detail",
-        ],
-      },
-    ],
-  },
+  { label: "Services", href: "#services", path: "/services" },
   { label: "Projects", href: "#projects", path: "/projects" },
   { label: "Contact",  href: "#contact",  path: "/contact" },
 ];
@@ -76,9 +51,37 @@ export default function SamarpanNavbar() {
   const [mobileOpen, setMobileOpen]         = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [mobileExpanded, setMobileExpanded] = useState(null);
+  const [settings, setSettings]             = useState({
+    phone: DEFAULT_PHONE,
+    email: DEFAULT_EMAIL,
+    whatsapp: DEFAULT_WHATSAPP,
+    instagram: DEFAULT_INSTAGRAM,
+    facebook: DEFAULT_FACEBOOK,
+  });
 
   const navigate  = useNavigate();
   const location  = useLocation();
+
+  useEffect(() => {
+    getSettings()
+      .then((res) => {
+        if (res.data) {
+          setSettings((prev) => ({
+            ...prev,
+            phone: res.data.phone || prev.phone,
+            email: res.data.email || prev.email,
+            whatsapp: res.data.whatsapp
+              ? (res.data.whatsapp.startsWith("http")
+                  ? res.data.whatsapp
+                  : `https://wa.me/${res.data.whatsapp.replace(/\D/g, "")}`)
+              : prev.whatsapp,
+            instagram: res.data.instagram || prev.instagram,
+            facebook: res.data.facebook || prev.facebook,
+          }));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -353,6 +356,12 @@ export default function SamarpanNavbar() {
     },
   };
 
+  const phoneLink = `tel:${(settings.phone || DEFAULT_PHONE).replace(/\s+/g, "")}`;
+  const emailLink = `https://mail.google.com/mail/?view=cm&to=${settings.email || DEFAULT_EMAIL}`;
+  const waLink = settings.whatsapp?.startsWith("http")
+    ? settings.whatsapp
+    : `https://wa.me/${(settings.whatsapp || DEFAULT_PHONE).replace(/\D/g, "")}`;
+
   return (
     <>
       <style>{`
@@ -396,13 +405,13 @@ export default function SamarpanNavbar() {
           <div style={s.topBarRight}>
 
             {/* Phone — clickable */}
-            <a href={PHONE_LINK} className="topbar-link" style={s.topBarLink}>
-              📞 {PHONE}
+            <a href={phoneLink} className="topbar-link" style={s.topBarLink}>
+              📞 {settings.phone}
             </a>
 
             {/* Email — opens Gmail / mail client */}
-            <a href={EMAIL_LINK} className="topbar-link" style={s.topBarLink}>
-              ✉ {EMAIL}
+            <a href={emailLink} className="topbar-link" style={s.topBarLink}>
+              ✉ {settings.email}
             </a>
 
             {/* Location */}
@@ -410,13 +419,17 @@ export default function SamarpanNavbar() {
 
             {/* Social icons */}
             <div style={s.topBarSocials}>
-              <a href={INSTAGRAM} target="_blank" rel="noopener noreferrer" className="topbar-social" style={s.topBarSocialIcon} aria-label="Instagram">
-                <IconInstagram />
-              </a>
-              <a href={FACEBOOK} target="_blank" rel="noopener noreferrer" className="topbar-social" style={s.topBarSocialIcon} aria-label="Facebook">
-                <IconFacebook />
-              </a>
-              <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="topbar-social" style={s.topBarSocialIcon} aria-label="WhatsApp">
+              {settings.instagram && (
+                <a href={settings.instagram} target="_blank" rel="noopener noreferrer" className="topbar-social" style={s.topBarSocialIcon} aria-label="Instagram">
+                  <IconInstagram />
+                </a>
+              )}
+              {settings.facebook && (
+                <a href={settings.facebook} target="_blank" rel="noopener noreferrer" className="topbar-social" style={s.topBarSocialIcon} aria-label="Facebook">
+                  <IconFacebook />
+                </a>
+              )}
+              <a href={waLink} target="_blank" rel="noopener noreferrer" className="topbar-social" style={s.topBarSocialIcon} aria-label="WhatsApp">
                 <IconWhatsApp />
               </a>
             </div>
@@ -471,7 +484,7 @@ export default function SamarpanNavbar() {
                               href="#"
                               className="dropdown-item"
                               style={s.dropdownItem}
-                              onClick={(e) => { e.preventDefault(); setActiveDropdown(null); }}
+                              onClick={(e) => { e.preventDefault(); setActiveDropdown(null); navigate("/services"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
                             >
                               {item}
                             </a>
@@ -486,9 +499,9 @@ export default function SamarpanNavbar() {
 
             {/* RIGHT — phone pill + CTA */}
             <div style={s.navRight}>
-              <a href={PHONE_LINK} className="phone-pill-xl phone-pill" style={s.phonePill}>
+              <a href={phoneLink} className="phone-pill-xl phone-pill" style={s.phonePill}>
                 <span>📞</span>
-                <span>{PHONE}</span>
+                <span>{settings.phone}</span>
               </a>
               <button className="cta-desktop cta-btn" style={s.ctaBtn} onClick={() => navigate("/contact")}>
                 Consultation →
@@ -536,7 +549,7 @@ export default function SamarpanNavbar() {
                           key={item}
                           href="#"
                           style={s.drawerAccordionItem}
-                          onClick={(e) => { e.preventDefault(); setMobileOpen(false); }}
+                          onClick={(e) => { e.preventDefault(); setMobileOpen(false); navigate("/services"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
                         >
                           — {item}
                         </a>
@@ -555,26 +568,30 @@ export default function SamarpanNavbar() {
 
             {/* Clickable contact links in drawer */}
             <div style={s.drawerContactRow}>
-              <a href={PHONE_LINK} className="drawer-contact-link" style={s.drawerContactLink}>
-                📞 {PHONE}
+              <a href={phoneLink} className="drawer-contact-link" style={s.drawerContactLink}>
+                📞 {settings.phone}
               </a>
-              <a href={EMAIL_LINK} className="drawer-contact-link" style={s.drawerContactLink}>
-                ✉️ {EMAIL}
+              <a href={emailLink} className="drawer-contact-link" style={s.drawerContactLink}>
+                ✉️ {settings.email}
               </a>
-              <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="drawer-contact-link" style={s.drawerContactLink}>
+              <a href={waLink} target="_blank" rel="noopener noreferrer" className="drawer-contact-link" style={s.drawerContactLink}>
                 💬 WhatsApp Us
               </a>
             </div>
 
             {/* Social icons */}
             <div style={s.drawerSocials}>
-              <a href={INSTAGRAM} target="_blank" rel="noopener noreferrer" className="drawer-social-icon" style={s.drawerSocialIcon} aria-label="Instagram">
-                <IconInstagram />
-              </a>
-              <a href={FACEBOOK} target="_blank" rel="noopener noreferrer" className="drawer-social-icon" style={s.drawerSocialIcon} aria-label="Facebook">
-                <IconFacebook />
-              </a>
-              <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="drawer-social-icon" style={s.drawerSocialIcon} aria-label="WhatsApp">
+              {settings.instagram && (
+                <a href={settings.instagram} target="_blank" rel="noopener noreferrer" className="drawer-social-icon" style={s.drawerSocialIcon} aria-label="Instagram">
+                  <IconInstagram />
+                </a>
+              )}
+              {settings.facebook && (
+                <a href={settings.facebook} target="_blank" rel="noopener noreferrer" className="drawer-social-icon" style={s.drawerSocialIcon} aria-label="Facebook">
+                  <IconFacebook />
+                </a>
+              )}
+              <a href={waLink} target="_blank" rel="noopener noreferrer" className="drawer-social-icon" style={s.drawerSocialIcon} aria-label="WhatsApp">
                 <IconWhatsApp />
               </a>
             </div>
